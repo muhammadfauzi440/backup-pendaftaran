@@ -78,6 +78,12 @@ Akses di browser melalui `http://127.0.0.1:8000`
 npm run dev
 ```
 untuk menjalankan server Vite
+
+## Optional
+```bash
+npm run build
+```
+
 ## Akun Akses Demo
 - **Admin**: `admin@gi.com` | **Password**: `admin123` 
 - **User**: `testing@gmail.com` | **Pasword**: `123456`
