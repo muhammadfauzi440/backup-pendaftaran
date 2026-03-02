@@ -106,7 +106,7 @@
                             <td class="px-8 py-6">
                                 <div class="flex justify-center items-center gap-2">
                                     <a href="{{ route('admin.instansi.edit', $i->id) }}" 
-                                       class="bg-gray-100 hover:bg-blue-600 hover:text-white px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
+                                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
                                        Edit
                                     </a>
                                     <form action="{{ route('admin.instansi.destroy', $i->id) }}" method="POST"
