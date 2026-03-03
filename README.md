@@ -79,18 +79,6 @@ npm run dev
 ```
 untuk menjalankan server Vite
 
-## Optional
-Jika Ingin mengakses localhost di HP
-```bash
-php artisan serve --host=0.0.0.0 --port=8000
-```
-```bash
-ngrok http 8000
-```
-```bash
-npm run build
-```
-
 
 ## Akun Akses Demo
 - **Admin**: `admin@gi.com` | **Password**: `admin123` 
