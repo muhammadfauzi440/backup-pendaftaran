@@ -29,7 +29,7 @@
             <div class="absolute -bottom-10 -left-10 w-20 h-20 bg-gray-50 rounded-full opacity-50"></div>
 
             <a href="/">
-                <img src="{{ asset('gambar/logo_gi.png') }}"
+                <img src="gambar/logo_gi.png"
                     class="w-36 mx-auto mb-8 relative z-10 hover:opacity-80 transition" alt="Logo">
             </a>
 

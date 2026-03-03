@@ -19,7 +19,7 @@
                 class="md:w-5/12 bg-gray-900 p-8 md:p-10 text-white flex flex-col justify-between relative overflow-hidden">
                 <div class="relative z-10">
                     <a href="/">
-                        <img src="{{ asset('gambar/logo_gi.png') }}" class="w-32 mb-8" alt="Logo">
+                        <img src="gambar/logo_gi.png" class="w-32 mb-8" alt="Logo">
                     </a>
                     <h2 class="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">Mulai Karir Digitalmu Disini.
                     </h2>
