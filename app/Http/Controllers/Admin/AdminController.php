@@ -11,12 +11,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $pendaftarans = Pendaftaran::with(['user', 'instansi', 'dokumen'])->latest()->get();
+        $pendaftarans = Pendaftaran::with(['user', 'instansi', 'dokumen'])
+            ->latest()
+            ->paginate(10); 
 
         return view('admin.pendaftaran.index', compact('pendaftarans'));
     }
@@ -24,104 +27,129 @@ class AdminController extends Controller
     public function show($id)
     {
         $pendaftaran = Pendaftaran::with(['user', 'instansi', 'dokumen'])->findOrFail($id);
-
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
 
     public function edit($id)
     {
-        $pendaftaran = Pendaftaran::with(['user', 'instansi', 'dokumen'])->findOrFail($id);
-        $instansis = Instansi::all();
+        $pendaftaran = Pendaftaran::with('dokumen')->findOrFail($id);
+        $instansis = Instansi::orderBy('nama_instansi', 'asc')->get();
 
         return view('admin.pendaftaran.edit', compact('pendaftaran', 'instansis'));
     }
+
 
     public function update(Request $request, $id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
 
-        $request->validate([
-            'nim_nisn' => 'required|numeric',
-            'instansi_id' => 'required|exists:instansis,id',
-            'kategori' => 'required|in:siswa,mahasiswa',
-            'jurusan' => 'required|string|max:100',
-            'kelas_semester' => 'required|string|max:50',
-            'tempat_lahir' => 'required|string|max:100',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
-            'agama' => 'required|string|max:50',
-            'kontak' => 'required|string|max:20',
-            'alamat' => 'required|string|max:500',
-            'tanggal_mulai' => 'required|date',
+        $validatedData = $request->validate([
+            'nim_nisn'        => 'required|string|max:25',
+            'instansi_id'     => 'required|exists:instansis,id',
+            'kategori'        => 'required|in:siswa,mahasiswa',
+            'jurusan'         => 'required|string|max:100',
+            'kelas_semester'  => 'required|string|max:50',
+            'tempat_lahir'    => 'required|string|max:100',
+            'tanggal_lahir'   => 'required|date',
+            'jenis_kelamin'   => 'required|in:laki-laki,perempuan',
+            'agama'           => 'required|string|max:50',
+            'kontak'          => 'required|string|max:20',
+            'alamat'          => 'required|string|max:500',
+            'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'durasi_bulan' => 'required|integer|min:1',
+            'durasi_bulan'    => 'nullable|integer|min:1|max:12',
+            'hapus_dokumen'   => 'nullable|array',
+            'hapus_dokumen.*' => 'exists:dokumens,id',
+            'dokumen_baru.*'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $pendaftaran->update($request->all());
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('admin.pendaftaran.index')->with('success', 'Data pendaftaran berhasil diperbarui');
+            $pendaftaran->update($request->only([
+                'nim_nisn', 'instansi_id', 'kategori', 'jurusan', 'kelas_semester',
+                'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'kontak',
+                'alamat', 'tanggal_mulai', 'tanggal_selesai', 'durasi_bulan'
+            ]));
+
+            if ($request->filled('hapus_dokumen')) {
+                $dokumensToDelete = $pendaftaran->dokumen()->whereIn('id', $request->hapus_dokumen)->get();
+                foreach ($dokumensToDelete as $dokumen) {
+                    Storage::disk('public')->delete($dokumen->file_path);
+                    $dokumen->delete();
+                }
+            }
+
+            if ($request->hasFile('dokumen_baru')) {
+                foreach ($request->file('dokumen_baru') as $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('uploads/dokumen', $filename, 'public');
+
+                    $pendaftaran->dokumen()->create([
+                        'tipe_dokumen' => strtoupper($file->getClientOriginalExtension()),
+                        'nama_dokumen' => $originalName,
+                        'file_path'    => $path,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('admin.pendaftaran.index')
+                ->with('success', 'Profil dan berkas pendaftar berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        $pendaftaran = Pendaftaran::with('dokumen')->findOrFail($id);
+        try {
+            DB::beginTransaction();
+            $pendaftaran = Pendaftaran::with('dokumen')->findOrFail($id);
 
-        if ($pendaftaran->dokumen->isNotEmpty()) {
             foreach ($pendaftaran->dokumen as $dok) {
-                if (Storage::disk('public')->exists($dok->file_path)) {
-                    Storage::disk('public')->delete($dok->file_path);
-                }
+                Storage::disk('public')->delete($dok->file_path);
             }
+
+            $pendaftaran->dokumen()->delete();
+            $pendaftaran->delete();
+
+            DB::commit();
+            return redirect()->route('admin.pendaftaran.index')
+                ->with('success', 'Data pendaftaran dan berkas terkait telah dihapus secara permanen.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal menghapus data.');
         }
-
-        $pendaftaran->delete();
-
-        return redirect()->route('admin.pendaftaran.index')
-            ->with('success', 'Data pendaftaran berhasil dihapus');
     }
 
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:diterima,ditolak',
-            'catatan_admin' => 'required|string|min:10|max:300',
-        ],
-            [
-                'catatan_admin.required' => 'Anda harus memberikan alasan atau catatan untuk pendaftar.',
-                'catatan_admin.min' => 'Catatan terlalu singkat',
-                'catatan_admin.max' => 'Catatan terlalu panjang',
-            ]);
+            'catatan_admin' => 'required|string|min:5|max:500',
+        ]);
 
-        try {
-            DB::beginTransaction();
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->update([
+            'status' => $request->status,
+            'catatan_admin' => $request->catatan_admin,
+        ]);
 
-            $pendaftaran = Pendaftaran::findOrFail($id);
-            $pendaftaran->update([
-                'status' => $request->status,
-                'catatan_admin' => $request->catatan_admin,
-            ]);
-
-            DB::commit();
-
-            $pesan = $request->status == 'diterima'
-            ? 'Pendaftaran berhasil diterima.'
-            : 'Pendaftaran telah ditolak';
-
-            return redirect()->route('admin.pendaftaran.index')->with('success', $pesan);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
-        }
+        return redirect()->route('admin.pendaftaran.index')
+            ->with('success', "Status pendaftaran berhasil diubah menjadi {$request->status}.");
     }
 
     public function exportPdf()
     {
         $pendaftarans = Pendaftaran::with(['user', 'instansi'])->latest()->get();
+        $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftarans'))
+                  ->setPaper('a4', 'landscape');
 
-        $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftarans'));
-
-        return $pdf->setPaper('a4', 'landscape')->download('laporan-pendaftaran.pdf');
+        return $pdf->download('laporan-pendaftaran-' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function exportExcel()
