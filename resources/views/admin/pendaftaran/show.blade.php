@@ -4,10 +4,10 @@
     <div class="max-w-6xl mx-auto">
         <div class="mb-8 flex justify-between items-center">
             <a href="{{ route('admin.pendaftaran.index') }}"
-                class="underline text-xs font-black text-gray-800 hover:text-gray-900 uppercase tracking-widest transition">&larr;
+                class="underline text-xs font-black text-red-600 hover:text-red-800 uppercase tracking-widest transition">&larr;
                 Kembali ke Daftar</a>
             <div class="flex gap-4">
-                <span class="text-[10px] font-black uppercase px-4 py-1.5 bg-gray-100 rounded-full tracking-widest">Dibuat:
+                <span class="text-[10px] font-black uppercase px-4 py-1.5 bg-gray-100 text-gray-600 rounded-full tracking-widest">Dibuat:
                     {{ $pendaftaran->created_at->format('d/m/Y') }}</span>
                 <span
                     class="text-[10px] font-black uppercase px-4 py-1.5 {{ $pendaftaran->status == 'pending' ? 'bg-amber-100 text-amber-600' : ($pendaftaran->status == 'diterima' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600') }} rounded-full tracking-widest">Status:
