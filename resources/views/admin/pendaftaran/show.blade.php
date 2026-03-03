@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="max-w-6xl mx-auto">
-        {{-- Header Navigation --}}
         <div class="mb-8 flex justify-between items-center">
             <a href="{{ route('admin.pendaftaran.index') }}"
                 class="underline text-xs font-black text-red-600 hover:text-red-800 uppercase tracking-widest transition">
@@ -19,10 +18,8 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {{-- Main Content --}}
             <div class="lg:col-span-2 space-y-8">
 
-                {{-- Section 01: Data Pribadi --}}
                 <div class="bg-white p-10 rounded-[2.5rem] border-2 border-gray-50 shadow-sm">
                     <div class="flex items-center gap-4 mb-8 pb-6 border-b border-gray-50">
                         <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-red-200">
@@ -63,7 +60,6 @@
                     </div>
                 </div>
 
-                {{-- Section 02: Informasi Akademik --}}
                 <div class="bg-white p-10 rounded-[2.5rem] border-2 border-gray-50 shadow-sm">
                     <div class="flex items-center gap-4 mb-8 pb-6 border-b border-gray-50">
                         <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-red-200">
@@ -111,7 +107,6 @@
                     </div>
                 </div>
 
-                {{-- Section 03: Lampiran Berkas --}}
                 <div class="bg-white p-10 rounded-[2.5rem] border-2 border-gray-50 shadow-sm">
                     <div class="flex items-center gap-4 mb-8 pb-6 border-b border-gray-50">
                         <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-red-200">
@@ -137,7 +132,6 @@
                 </div>
             </div>
 
-            {{-- Sidebar: Verifikasi --}}
             <div class="space-y-6">
                 <div class="bg-gray-900 p-8 rounded-[2.5rem] shadow-2xl sticky top-8 border border-white/5">
                     <h2 class="text-white text-xl font-black uppercase mb-8 italic tracking-tighter border-b border-white/10 pb-4">
