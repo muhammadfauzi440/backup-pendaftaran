@@ -160,12 +160,6 @@
                             </button>
                         </div>
                     </form>
-
-                    <div class="mt-10 pt-6 border-t border-white/10 text-center">
-                        <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed tracking-widest">
-                            Peringatan: Keputusan verifikasi bersifat final dan akan langsung terkirim ke dashboard pendaftar.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
