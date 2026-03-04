@@ -16,7 +16,7 @@
                     </svg>
                     Kembali ke Daftar
                 </a>
-                <h1 class="text-4xl font-black text-gray-900 tracking-tighter uppercase">Edit Profil</h1>
+                <h1 class="text-2xl font-black text-gray-900 tracking-tighter uppercase">Edit Profil</h1>
             </div>
         </div>
 

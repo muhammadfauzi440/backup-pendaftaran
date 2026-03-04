@@ -14,7 +14,7 @@
                     </svg>
                     Kembali ke Daftar Instansi
                 </a>
-                <h1 class="text-4xl font-black text-gray-900 tracking-tighter uppercase">Edit Instansi</h1>
+                <h1 class="text-2xl font-black text-gray-900 tracking-tighter uppercase">Edit Instansi</h1>
             </div>
         </div>
 
@@ -35,10 +35,6 @@
 
             <div class="space-y-6">
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <div class="px-8 py-6 border-b border-gray-50 bg-gray-50/50">
-                        <h2 class="text-xs font-black uppercase tracking-[0.2em] text-gray-400">01. Profil Utama Instansi
-                        </h2>
-                    </div>
                     <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="md:col-span-2 space-y-2">
                             <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Nama Instansi
