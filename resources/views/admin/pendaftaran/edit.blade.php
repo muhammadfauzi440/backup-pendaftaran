@@ -141,8 +141,7 @@
                     <div class="p-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                             @forelse ($pendaftaran->dokumen as $dok)
-                                <div x-data="{ isSelected: false }" 
-                                     :class="isSelected ? 'bg-red-50 border-red-200 opacity-60' : 'bg-gray-50 border-transparent'"
+                                <div x-data="{ isSelected: false }" :class="isSelected ? 'bg-red-50 border-red-200 opacity-60' : 'bg-gray-200 border-transparent'"
                                      class="group flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300">
                                     
                                     <div class="flex items-center gap-4 overflow-hidden">
