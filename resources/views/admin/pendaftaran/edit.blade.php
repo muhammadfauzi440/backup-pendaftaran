@@ -40,7 +40,7 @@
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <div class="flex items-center gap-3 px-8 py-6 border-b border-gray-50 bg-gray-50/50">
                         <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-bold">01</div>
-                        <h2 class="text-lg font-black uppercase tracking-[0.2em] text-gray-900"> Informasi Pribadi</h2>
+                        <h2 class="text-lg font-black uppercase tracking-[0.2em] text-gray-900"> Data Pribadi</h2>
                     </div>
                     <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-2">
@@ -81,7 +81,7 @@
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <div class="flex items-center gap-3 px-8 py-6 border-b border-gray-50 bg-gray-50/50">
                         <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-bold">02</div>
-                        <h2 class="text-lg font-black uppercase tracking-[0.2em] text-gray-900"> Detail Akademik & Waktu Magang</h2>
+                        <h2 class="text-lg font-black uppercase tracking-[0.2em] text-gray-900"> Informasi Akademik & Waktu Magang</h2>
                     </div>
                     <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div class="space-y-2">
