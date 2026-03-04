@@ -4,7 +4,7 @@
     <div class="max-w-6xl mx-auto">
         <div class="mb-8 flex justify-between items-center">
             <a href="{{ route('admin.pendaftaran.index') }}"
-                class="underline text-xs font-black text-red-600 hover:text-red-800 uppercase tracking-widest transition">
+                class=" text-xs font-black text-red-600 hover:text-red-800 uppercase tracking-widest transition">
                 &larr; Kembali ke Daftar
             </a>
             <div class="flex gap-4">

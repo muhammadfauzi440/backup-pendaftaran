@@ -7,7 +7,7 @@
         <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
                 <a href="{{ route('admin.pendaftaran.index') }}"
-                    class="group flex items-center text-[10px] font-black uppercase tracking-widest text-gray-800 hover:text-red-600 transition-all mb-4">
+                    class="group flex items-center text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-700 transition-all mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="h-3 w-3 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
