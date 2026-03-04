@@ -41,7 +41,7 @@ npm install
 ### 4. Konfigurasi Environment
 Salin fle `.env.example` menjadi `.env`:
 ```bash
-cp .env.example .env
+copy .env.example .env
 ```
 Buka file `.env` dan sesuaikan nama database:
 ```
