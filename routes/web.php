@@ -22,14 +22,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/cek-status/{nim}', [PendaftaranController::class, 'cekStatusPublic']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-    Route::post('/admin/users', [ProfileController::class, 'store'])->name('admin.users.store');
-    Route::delete('/admin/users/{id}', [ProfileController::class, 'destroy'])->name('admin.users.destroy');
-});
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
 
@@ -42,7 +34,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/kelola-pendaftaran/{id}', [AdminController::class, 'destroy'])->name('admin.pendaftaran.destroy');
     Route::post('/admin/kelola-pendaftaran/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.pendaftaran.updateStatus');
 
-    
+    Route::post('/admin/users', [ProfileController::class, 'store'])->name('admin.users.store');
+    Route::delete('/admin/users/{id}', [ProfileController::class, 'destroy'])->name('admin.users.destroy');
 
     Route::get('/admin/export/excel', [AdminController::class, 'exportExcel'])->name('admin.export.excel');
     Route::get('/admin/export/pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
@@ -52,4 +45,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index_user'])->name('user.dashboard');
     Route::get('/user/daftar', [PendaftaranController::class, 'index'])->name('user.daftar');
     Route::post('/user/daftar/submit', [PendaftaranController::class, 'storeOrUpdate'])->name('user.daftar.submit');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
 });

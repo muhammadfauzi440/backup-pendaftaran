@@ -136,14 +136,13 @@
                             placeholder="Contoh: Islam" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-black text-gray-700 uppercase mb-2">Nomor Kontak / WA</label>
+                        <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kontak / WA</label>
                         <input type="text" name="kontak" value="{{ old('kontak', $pendaftaran->kontak ?? '') }}"
                             class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4" placeholder="08..."
                             required>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-black text-gray-700 uppercase mb-2">Alamat Tinggal Sesuai
-                            KTP</label>
+                        <label class="block text-sm font-black text-gray-700 uppercase mb-2">Alamat Lengkap</label>
                         <textarea name="alamat" rows="3" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4"
                             placeholder="Jl. Nama Jalan, No, RT/RW, Kec, Kab" required>{{ old('alamat', $pendaftaran->alamat ?? '') }}</textarea>
                     </div>
