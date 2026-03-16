@@ -16,7 +16,7 @@ class ProfileController extends Controller
 
         if ($user->role == 'admin') {
             $allUsers = User::where('id', '!=', $user->id)->orderBy('role', 'asc')->get();
-            return view('admin.akun', compact('allUsers'));
+            return view('admin.users.index', compact('allUsers'));
         } else {
             return view('user.akun', compact('user'));
         }
@@ -80,7 +80,7 @@ class ProfileController extends Controller
             return back()->with('error', 'Anda tidak memiliki izin untuk mengedit pengguna');
         }
         
-        return view('admin.edit-user', compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     public function updateUser(Request $request, $id)
