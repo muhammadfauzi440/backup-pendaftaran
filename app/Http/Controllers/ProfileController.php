@@ -70,4 +70,43 @@ class ProfileController extends Controller
 
         return back()->with('success', 'Pengguna berhasil dihapus');
     }
+
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        $currentUser = Auth::user();
+        
+        if ($currentUser->role !== 'admin') {
+            return back()->with('error', 'Anda tidak memiliki izin untuk mengedit pengguna');
+        }
+        
+        return view('admin.edit-user', compact('user'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $currentUser = Auth::user();
+        
+        if ($currentUser->role !== 'admin') {
+            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah pengguna');
+        }
+        
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $id],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
+        
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        
+        if ($request->filled('password')) {
+            $user->password = Hash::make($validated['password']);
+        }
+        
+        $user->save();
+        
+        return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui');
+    }
 }

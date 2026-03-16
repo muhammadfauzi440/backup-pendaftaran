@@ -18,9 +18,6 @@
             <div
                 class="md:w-5/12 bg-gray-900 p-8 md:p-10 text-white flex flex-col justify-between relative overflow-hidden">
                 <div class="relative z-10">
-                    <a href="/">
-                        <img src="gambar/logo_gi.png" class="w-32 mb-8" alt="Logo">
-                    </a>
                     <h2 class="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">Mulai Karir Digitalmu Disini.
                     </h2>
                     <p class="text-gray-400 leading-relaxed text-sm opacity-90">
@@ -49,7 +46,7 @@
                         </svg>
                         <span class="text-[10px] font-black uppercase tracking-widest">Kembali ke Beranda</span>
                     </a>
-                    <h3 class="text-xl font-black mb-6 text-gray-900 flex items-center">
+                    <h3 class="text-xl font-black mb-2 text-gray-900 flex items-center">
                         Registrasi Akun
                     </h3>
 
@@ -110,7 +107,7 @@
                         </div>
                     </form>
 
-                    <p class="mt-8 text-center text-xs text-gray-500">
+                    <p class="mt-4 text-center text-xs text-gray-500">
                         Sudah punya akun? <a href="{{ route('login') }}"
                             class="text-red-600 font-bold hover:underline">Masuk di sini</a>
                     </p>

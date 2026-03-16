@@ -25,7 +25,7 @@
     <nav class="fixed w-full z-50 top-0 border-b border-gray-100 glass-nav backdrop-blur-xl bg-white/85">
         <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
             <a href="/" class="flex items-center">
-                <img src="gambar/logo_gi.png" alt="Logo GI" class="w-32 h-auto">
+                <img src="gambar/logo_gi.png" alt="Logo GI" class="w-full h-auto">
             </a>
 
             <div

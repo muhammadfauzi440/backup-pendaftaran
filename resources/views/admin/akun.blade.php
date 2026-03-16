@@ -61,16 +61,17 @@
                             </td>
                             <td class="px-8 py-6">
                                 <div class="flex justify-center items-center gap-3">
+                                    <a href="{{ route('admin.users.edit', $u->id) }}"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
+                                        Edit
+                                    </a>
                                     <form action="{{ route('admin.users.destroy', $u->id) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus user ini?')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm border border-red-100">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
+                                            class="bg-red-600 text-white hover:bg-red-900 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
+                                            Hapus
                                         </button>
                                     </form>
                                 </div>

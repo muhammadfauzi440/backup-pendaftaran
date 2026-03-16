@@ -28,11 +28,6 @@
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-red-50 rounded-full opacity-50"></div>
             <div class="absolute -bottom-10 -left-10 w-20 h-20 bg-gray-50 rounded-full opacity-50"></div>
 
-            <a href="/">
-                <img src="gambar/logo_gi.png"
-                    class="w-36 mx-auto mb-8 relative z-10 hover:opacity-80 transition" alt="Logo">
-            </a>
-
             <div class="relative z-10 mb-8">
                 <a href="/"
                     class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 transition-all mb-6 group">

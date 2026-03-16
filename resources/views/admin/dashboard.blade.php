@@ -18,7 +18,7 @@
 
     <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
         class="fixed left-0 top-0 h-screen bg-gray-900 text-white transition-all duration-300 z-50">
-        <div class="p-6 flex items-center gap-4 border-b border-gray-800">
+        <div class="p-6 flex items-center gap-4 border-b border-gray-800 justify-center">
             <span x-show="sidebarOpen" class="font-bold text-lg whitespace-nowrap">Admin <span
                     class="text-red-600">Dashboard</span></span>
         </div>
@@ -56,8 +56,8 @@
                 <span x-show="sidebarOpen" class="font-bold">Data Instansi</span>
             </a>
 
-            <a href="{{ route('profile.index') }}"
-                class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all {{ request()->routeIs('profile.*') ? 'bg-red-600 text-white' : 'text-gray-400 hover:bg-white/5' }}">
+            <a href="{{ route('admin.users.index') }}"
+                class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all {{ request()->routeIs('admin.users.*') ? 'bg-red-600 text-white' : 'text-gray-400 hover:bg-white/5' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -93,35 +93,125 @@
             </button>
         </header>
 
-        <div class="p-8">
+        <div class="p-4 pb-6 overflow-y-auto" style="height: calc(100vh - 80px);">
             @hasSection('content')
                 @yield('content')
             @else
-                <div class="mb-10">
-                    <h1 class="text-2xl uppercase font-black text-gray-900">Dashboard Admin</h1>
-                    <p class="text-gray-500 text-sm">Statistik pendaftaran magang terbaru.</p>
+                <div class="mb-4 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-xl font-black text-gray-900">Dashboard Admin</h1>
+                        <p class="text-gray-500 text-xs">Statistik pendaftaran magang terbaru.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="tahunFilter" class="text-sm font-semibold text-gray-700">Filter Tahun:</label>
+                        <select id="tahunFilter" onchange="filterTahun(this.value)"
+                            class="px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                            @foreach($allYears as $tahun)
+                                <option value="{{ $tahun }}" {{ $tahun == $selectedYear ? 'selected' : '' }}>
+                                    Tahun {{ $tahun }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Peserta</p>
-                        <h2 class="text-4xl font-black text-gray-900 mt-2">{{ $stats['total'] ?? 0 }}</h2>
+
+                <div class="grid grid-cols-4 gap-3 mb-4">
+                    <div class="bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wide">Total Peserta</p>
+                        <h2 class="text-3xl font-black text-gray-900 mt-1">{{ $stats['total'] ?? 0 }}</h2>
                     </div>
-                    <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Pending</p>
-                        <h2 class="text-4xl font-black text-amber-500 mt-2">{{ $stats['pending'] ?? 0 }}</h2>
+                    <div class="bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wide">Pending</p>
+                        <h2 class="text-3xl font-black text-amber-500 mt-1">{{ $stats['pending'] ?? 0 }}</h2>
                     </div>
-                    <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Diterima</p>
-                        <h2 class="text-4xl font-black text-emerald-600 mt-2">{{ $stats['diterima'] ?? 0 }}</h2>
+                    <div class="bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wide">Diterima</p>
+                        <h2 class="text-3xl font-black text-emerald-600 mt-1">{{ $stats['diterima'] ?? 0 }}</h2>
                     </div>
-                    <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Ditolak</p>
-                        <h2 class="text-4xl font-black text-red-600 mt-2">{{ $stats['ditolak'] ?? 0 }}</h2>
+                    <div class="bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wide">Ditolak</p>
+                        <h2 class="text-3xl font-black text-red-600 mt-1">{{ $stats['ditolak'] ?? 0 }}</h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-white rounded-lg border border-gray-100 shadow-sm p-4">
+                        <h3 class="text-sm font-bold text-gray-900 mb-3">Kategori Pendaftar</h3>
+                        <div class="space-y-3">
+                            @forelse($kategoriStats as $kategori => $total)
+                                <div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-semibold text-gray-700">{{ $kategori }}</span>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">{{ $total }}</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded h-1.5">
+                                        <div class="bg-blue-600 h-1.5 rounded transition-all duration-300" 
+                                             style="width: {{ ($total / $stats['total']) * 100 }}%"></div>
+                                    </div>
+                                    <div class="text-[10px] text-gray-500 mt-0.5">{{ round(($total / $stats['total']) * 100) }}%</div>
+                                </div>
+                            @empty
+                                <p class="text-gray-500 text-center text-xs py-2">No data</p>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-gray-100 shadow-sm p-4 col-span-2">
+                        <h3 class="text-sm font-bold text-gray-900 mb-3">Pendaftar Per Bulan (Tahun {{ $selectedYear }}) - Januari hingga Desember</h3>
+                        <div class="grid grid-cols-6 gap-2">
+                            @php
+                                $maxCount = max(array_column($monthlyChartData, 'count'));
+                            @endphp
+                            @forelse($monthlyChartData as $monthData)
+                                <div class="text-center">
+                                    <div class="flex flex-col items-center gap-1">
+                                        <span class="text-xs font-bold text-gray-700 h-4">{{ $monthData['label'] }}</span>
+                                        <div class="w-full bg-gray-200 rounded h-16 flex items-end justify-center">
+                                            <div class="bg-green-500 w-full rounded transition-all duration-300" 
+                                                 style="height: {{ $maxCount > 0 ? ($monthData['count'] / $maxCount) * 100 : 0 }}%; min-height: 2px;"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-900">{{ $monthData['count'] }}</span>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="col-span-6 text-gray-500 text-center text-xs py-2">No data</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 bg-white rounded-lg border border-gray-100 shadow-sm p-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        @forelse($kategoriStats as $kategori => $total)
+                            @php
+                                $percent = $total > 0 ? round(($total / $stats['total']) * 100) : 0;
+                                $colors = [
+                                    'SMK' => 'bg-purple-50 text-purple-900 border-purple-200',
+                                    'UNIVERSITAS' => 'bg-indigo-50 text-indigo-900 border-indigo-200'
+                                ];
+                                $bgColor = $colors[$kategori] ?? 'bg-gray-50 text-gray-900 border-gray-200';
+                            @endphp
+                            <div class="border {{ $bgColor }} rounded p-3">
+                                <p class="text-xs font-semibold mb-1">{{ $kategori }}</p>
+                                <div class="flex justify-between items-end">
+                                    <p class="text-2xl font-black">{{ $total }}</p>
+                                    <p class="text-lg font-bold">{{ $percent }}%</p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="col-span-2 text-gray-500 text-center text-xs py-2">No data</p>
+                        @endforelse
                     </div>
                 </div>
             @endif
         </div>
     </div>
+
+    <script>
+        function filterTahun(tahun) {
+            window.location.href = `{{ route('admin.dashboard') }}?tahun=${tahun}`;
+        }
+    </script>
 </body>
 
 </html>

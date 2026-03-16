@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             Pendaftaran::create([
                 'user_id'         => $user->id,
                 'instansi_id'     => $instansis->random()->id,
-                'kategori'        => 'Mahasiswa',
+                'kategori'        => $kategori = rand(0, 1) ? 'siswa' : 'mahasiswa',
                 'kelas_semester'  => 'Semester 5',
                 'nim_nisn'        => rand(10000000, 99999999),
                 'jurusan'         => 'Teknik Informatika',
