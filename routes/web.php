@@ -12,6 +12,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::get('/login', [AuthController::class, 'login_form'])->name('login');
 Route::post('/login', [AuthController::class, 'login_proses']);
 
@@ -20,7 +21,9 @@ Route::post('/register', [AuthController::class, 'register_proses']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/cek-status/{nim}', [PendaftaranController::class, 'cekStatusPublic']);
+Route::middleware('throttle:5,1')->group(function () {
+    Route::get('/cek-status/{nim}', [PendaftaranController::class, 'checkStatus']);
+});
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
