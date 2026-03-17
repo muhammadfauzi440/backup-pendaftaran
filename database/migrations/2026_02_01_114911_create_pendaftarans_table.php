@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('pendaftarans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('instansi_id')->constrained()->onDelete('cascade');
+
+            $table->string('kode_pendaftaran', 20)->unique()->index();
 
             $table->enum('kategori', ['siswa', 'mahasiswa']);
             $table->string('nim_nisn', 30)->unique();

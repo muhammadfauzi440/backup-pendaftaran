@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Instansi;
 use App\Models\Dokumen;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 class Pendaftaran extends Model
 {
     protected $guarded = ['id'];
@@ -14,10 +16,10 @@ class Pendaftaran extends Model
     protected $fillable = [
         'user_id',
         'instansi_id',
+        'kode_pendaftaran',
         'kategori',
         'nim_nisn',
         'kelas_semester',
-        'asal_instansi',
         'jurusan',
         'tanggal_mulai',
         'tanggal_selesai',
@@ -28,7 +30,6 @@ class Pendaftaran extends Model
         'jenis_kelamin',
         'agama',
         'kontak',
-        'surat_pengajuan',
         'status',
         'catatan_admin'
     ];
@@ -41,7 +42,10 @@ class Pendaftaran extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault([
+            'name' => 'User Tidak Ditemukan',
+            'email' => 'Email Tidak Ditemukan'
+        ]);
     }
 
     public function instansi() 
@@ -52,5 +56,16 @@ class Pendaftaran extends Model
     public function dokumen()
     {
         return $this->hasMany(Dokumen::class, 'pendaftaran_id');
+    }
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::creating(function($pendaftaran){
+            if (empty($pendaftaran->kode_pendaftaran)) {
+                $pendaftaran->kode_pendaftaran = 'GIN-' . strtoupper(str()->random(8));
+            }
+        });
     }
 }
