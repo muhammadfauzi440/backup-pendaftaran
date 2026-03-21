@@ -11,7 +11,6 @@ class AuthController extends Controller
 {
     public function login_form()
     {
-        // Jika sudah login, lempar ke halaman konfirmasi yang Anda buat
         if (Auth::check()) {
             return view('auth.confirm_login');
         }
