@@ -154,9 +154,9 @@
 
                         <div class="w-full max-w-md">
                             <div class="relative group">
-                                <input type="text" id="nim_nisn_input"
+                                <input type="text" id="kode_input"
                                     class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-red-500 transition-all focus:bg-white/10"
-                                    placeholder="Masukkan NIM atau NISN">
+                                    placeholder="Masukkan Kode Pendaftaran">
                                 <button
                                     class="absolute right-2 top-2 bottom-2 px-6 bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase rounded-lg transition-all tracking-widest shadow-lg"
                                     onclick="cekStatus()">

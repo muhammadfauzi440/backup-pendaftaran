@@ -103,10 +103,10 @@ class PendaftaranController extends Controller
         }
     }
 
-    public function cekStatusPublic($nim)
+    public function cekStatusPublic($kode)
     {
         $pendaftaran = Pendaftaran::with('user')
-        ->where('nim_nisn', $nim)
+        ->where('kode_pendaftaran', $kode)
         ->first();
 
         if ($pendaftaran) {

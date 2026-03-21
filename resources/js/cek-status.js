@@ -1,15 +1,15 @@
 window.cekStatus = function () {
-    const nimInput = document.getElementById("nim_nisn_input");
+    const kodeInput = document.getElementById("kode_input");
     const container = document.getElementById("result_container");
     const content = document.getElementById("result_content");
 
-    if (!nimInput.value.trim()) {
-        alert("Silahkan masukkan NIM atau NISN");
-        nimInput.focus();
+    if (!kodeInput.value.trim()) {
+        alert("Silahkan Masukkan Kode Pendaftaran");
+        kodeInput.focus();
         return;
     }
 
-    const nim = nimInput.value;
+    const kode = kodeInput.value.toUpperCase();
 
     content.innerHTML = `
     <div class="flex items-center gap-3 py-2">
@@ -18,7 +18,7 @@ window.cekStatus = function () {
     </div>`;
     container.classList.remove("hidden");
 
-    fetch(`/cek-status/${nim}`, {
+    fetch(`/cek-status/${kode}`, {
         method: "GET",
         headers: {
             "X-Requested-With": "XMLHttpRequest",

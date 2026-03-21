@@ -84,7 +84,7 @@ class AdminController extends Controller
                 foreach ($request->file('dokumen_baru') as $file) {
                     $originalName = $file->getClientOriginalName();
                     $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('uploads/dokumen', $filename, 'public');
+                    $path = $file->storeAs('pendaftaran/dokumen', $filename, 'public');
 
                     $pendaftaran->dokumen()->create([
                         'tipe_dokumen' => strtoupper($file->getClientOriginalExtension()),

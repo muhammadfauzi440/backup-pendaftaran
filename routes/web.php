@@ -22,7 +22,7 @@ Route::post('/register', [AuthController::class, 'register_proses']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('throttle:5,1')->group(function () {
-    Route::get('/cek-status/{nim}', [PendaftaranController::class, 'checkStatus']);
+    Route::get('/cek-status/{kode}', [PendaftaranController::class, 'cekStatusPublic']);
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
