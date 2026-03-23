@@ -17,8 +17,9 @@ return new class extends Migration
             $table->foreignId('instansi_id')->constrained()->onDelete('cascade');
 
             $table->string('kode_pendaftaran', 20)->unique()->index();
-
+            $table->enum('tipe_pendaftaran', ['individu', 'kelompok'])->default('individu');
             $table->enum('kategori', ['siswa', 'mahasiswa']);
+
             $table->string('nim_nisn', 30)->unique();
             $table->string('kelas_semester');
             $table->string('jurusan');

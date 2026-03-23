@@ -9,7 +9,9 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/cek-status.js',
-                'resources/js/scroll.js'
+                'resources/js/scroll.js',
+                'resources/js/daftar.js',
+                'resources/js/kelompok.js',
             ],
             refresh: true,
         }),

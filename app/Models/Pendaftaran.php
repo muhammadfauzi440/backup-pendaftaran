@@ -17,6 +17,7 @@ class Pendaftaran extends Model
         'user_id',
         'instansi_id',
         'kode_pendaftaran',
+        'tipe_pendaftaran',
         'kategori',
         'nim_nisn',
         'kelas_semester',
@@ -56,6 +57,11 @@ class Pendaftaran extends Model
     public function dokumen()
     {
         return $this->hasMany(Dokumen::class, 'pendaftaran_id');
+    }
+
+    public function anggota()
+    {
+        return $this->hasMany(AnggotaPendaftaran::class, 'pendaftaran_id');
     }
 
     protected static function booted()

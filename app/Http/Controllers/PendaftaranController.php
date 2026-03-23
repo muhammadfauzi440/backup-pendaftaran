@@ -14,16 +14,17 @@ use Carbon\Carbon;
 
 class PendaftaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $pendaftaran = Pendaftaran::with(['instansi', 'dokumen'])
+        $pendaftaran = Pendaftaran::with(['instansi', 'dokumen', 'anggota'])
                                         ->where('user_id', $user->id)
                                         ->first();
 
         $instansis = Instansi::orderBy('nama_instansi', 'asc')->get();
+        $tipe = $request->query('tipe', $pendaftaran ? $pendaftaran->tipe_pendaftaran : 'individu');
 
-        return view('user.daftar', compact('pendaftaran', 'instansis'));
+        return view('user.daftar', compact('pendaftaran', 'instansis', 'tipe'));
     }
 
     public function storeOrUpdate(Request $request)
@@ -45,12 +46,19 @@ class PendaftaranController extends Controller
             'jenis_kelamin' => 'required|in:laki-laki,perempuan',
             'agama' => 'required|string',
             'kontak' => 'required|string',
+
+            'tipe_pendaftaran' => 'required|in:individu,kelompok',
+            'anggota' => 'nullable|array',
+            'anggota.*.nama' => 'required_with:anggota|string|max:255',
+            'anggota.*.nim_nisn' => 'required_with:anggota|string|max:30',
             
             'dokumen' => $pendaftaran ? 'nullable|array' : 'required|array|min:1',
             'dokumen.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
             'tipe_dokumen' => 'required|string',
             'tipe_dokumen.*' => 'required|string',
         ]);
+
+        $request->validate($rules);
         
         DB::beginTransaction();
         try {
@@ -75,7 +83,7 @@ class PendaftaranController extends Controller
             ]);
 
             $data['user_id'] = $user->id;
-            $data['durasi_bulan'] = $durasi;
+            $data['durasi_bulan'] = $durasi ?? 0;
 
             if ($pendaftaran) {
                 $pendaftaran->update($data);
