@@ -45,7 +45,7 @@ class PendaftaranController extends Controller
             'alamat'           => 'required|string',
             'jenis_kelamin'    => 'required|in:laki-laki,perempuan',
             'agama'            => 'required|string',
-            'kontak'           => 'required|numeric|digits_between:10,20',
+            'kontak'           => 'required|numeric|digits_between:8,20',
 
             'tipe_pendaftaran' => 'required|in:individu,kelompok',
 
@@ -53,16 +53,16 @@ class PendaftaranController extends Controller
             'anggota.*.nama'          => 'required_with:anggota|string|max:255',
             'anggota.*.nim_nisn'      => 'required_with:anggota|numeric|digits_between:5,30',
             'anggota.*.jurusan'       => 'required_with:anggota|string|max:100',
-            'anggota.*.kelas_semester'=> 'required_with:anggota|string|max:100',
+            'anggota.*.kelas_semester' => 'required_with:anggota|string|max:100',
             'anggota.*.tempat_lahir'  => 'required_with:anggota|string|max:100',
             'anggota.*.tanggal_lahir' => 'required_with:anggota|date',
             'anggota.*.jenis_kelamin' => 'required_with:anggota|in:laki-laki,perempuan',
             'anggota.*.agama'         => 'required_with:anggota|string|max:50',
-            'anggota.*.kontak'        => 'required_with:anggota|numeric|digits_between:10,20',
+            'anggota.*.kontak'        => 'required_with:anggota|numeric|digits_between:8,20',
             'anggota.*.alamat'        => 'required_with:anggota|string',
 
-            'dokumen'          => $pendaftaran ? 'nullable|array' : 'required|array|min:1',
-            'dokumen.*'        => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'dokumen'          => 'nullable|array',
+            'dokumen.*'        => 'nullable|file|max:5120',
             'tipe_dokumen'     => 'required|array',
             'tipe_dokumen.*'   => 'required|string',
         ];
