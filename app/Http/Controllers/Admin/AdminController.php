@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
+use App\Mail\StatusPendaftaranMail;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -162,14 +164,21 @@ class AdminController extends Controller
             'catatan_admin' => 'required|string|min:5|max:500',
         ]);
 
-        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran = Pendaftaran::with('user')->findOrFail($id);
+
         $pendaftaran->update([
             'status' => $request->status,
             'catatan_admin' => $request->catatan_admin,
         ]);
 
-        return redirect()->route('admin.pendaftaran.index')
-            ->with('success', "Status pendaftaran berhasil diubah menjadi {$request->status}.");
+        try {
+            Mail::to($pendaftaran->user->email)->send(new StatusPendaftaranMail($pendaftaran));
+            return redirect()->route('admin.pendaftaran.index')
+                ->with('success', "Status pendaftaranberhasil diubah menjadi {$request->status} dan email notifikasi telah dikirim ke {$pendaftaran->user->email}.");
+        } catch (\Exception $e) {
+            return redirect()->route('admin.pendaftaran.index')
+                ->with('error', "Status berhasil diubah, TETAPI gagal mengirim email notifikasi. Error: " . $e->getMessage());
+        }
     }
 
     public function exportPdf()

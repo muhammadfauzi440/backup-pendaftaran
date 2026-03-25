@@ -1,15 +1,29 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\InstansiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\KirimEmailTest;
+
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/test-email', function() {
+    try {
+        $emailTujuan = 'uzik3580@gmail.com';
+        Mail::to($emailTujuan)->send(new KirimEmailTest());
+        return "Testin email ke {$emailTujuan}. cek inbox";
+    } catch (\Exception $e) {
+        return "Terjadi kesalahan saat mengirim email:" . $e->getMessage();
+    }
 });
 
 
