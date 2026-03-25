@@ -19,7 +19,7 @@ class AdminController extends Controller
     {
         $pendaftarans = Pendaftaran::with(['user', 'instansi', 'dokumen'])
             ->latest()
-            ->paginate(10); 
+            ->paginate(10);
 
         return view('admin.pendaftaran.index', compact('pendaftarans'));
     }
@@ -58,6 +58,19 @@ class AdminController extends Controller
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'durasi_bulan'    => 'nullable|integer|min:1|max:12',
+
+            'anggota'                 => 'nullable|array',
+            'anggota.*.nama'          => 'required_with:anggota|string|max:255',
+            'anggota.*.nim_nisn'      => 'required_with:anggota|string|max:30',
+            'anggota.*.jurusan'       => 'required_with:anggota|string|max:100',
+            'anggota.*.kelas_semester' => 'required_with:anggota|string|max:100',
+            'anggota.*.tempat_lahir'  => 'required_with:anggota|string|max:100',
+            'anggota.*.tanggal_lahir' => 'required_with:anggota|date',
+            'anggota.*.jenis_kelamin' => 'required_with:anggota|in:laki-laki,perempuan',
+            'anggota.*.agama'         => 'required_with:anggota|string|max:50',
+            'anggota.*.kontak'        => 'required_with:anggota|string|max:20',
+            'anggota.*.alamat'        => 'required_with:anggota|string',
+
             'hapus_dokumen'   => 'nullable|array',
             'hapus_dokumen.*' => 'exists:dokumens,id',
             'dokumen_baru.*'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -67,10 +80,27 @@ class AdminController extends Controller
             DB::beginTransaction();
 
             $pendaftaran->update($request->only([
-                'nim_nisn', 'instansi_id', 'kategori', 'jurusan', 'kelas_semester',
-                'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'kontak',
-                'alamat', 'tanggal_mulai', 'tanggal_selesai', 'durasi_bulan'
+                'nim_nisn',
+                'instansi_id',
+                'kategori',
+                'jurusan',
+                'kelas_semester',
+                'tempat_lahir',
+                'tanggal_lahir',
+                'jenis_kelamin',
+                'agama',
+                'kontak',
+                'alamat',
+                'tanggal_mulai',
+                'tanggal_selesai',
+                'durasi_bulan'
             ]));
+
+            if ($request->has('anggota')) {
+                foreach ($request->anggota as $anggota_id => $data_anggota) {
+                    \App\Models\AnggotaPendaftaran::where('id', $anggota_id)->update($data_anggota);
+                }
+            }
 
             if ($request->filled('hapus_dokumen')) {
                 $dokumensToDelete = $pendaftaran->dokumen()->whereIn('id', $request->hapus_dokumen)->get();
@@ -97,7 +127,6 @@ class AdminController extends Controller
             DB::commit();
             return redirect()->route('admin.pendaftaran.index')
                 ->with('success', 'Profil dan berkas pendaftar berhasil diperbarui.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
@@ -147,13 +176,13 @@ class AdminController extends Controller
     {
         $pendaftarans = Pendaftaran::with(['user', 'instansi'])->latest()->get();
         $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftarans'))
-                  ->setPaper('a4', 'landscape');
+            ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-pendaftaran-' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function exportExcel()
     {
-        return Excel::download(new PendaftaranExport, 'laporan-pendaftaran-'.date('Y-m-d').'.xlsx');
+        return Excel::download(new PendaftaranExport, 'laporan-pendaftaran-' . date('Y-m-d') . '.xlsx');
     }
 }

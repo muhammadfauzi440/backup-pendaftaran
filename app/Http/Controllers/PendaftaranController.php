@@ -61,8 +61,8 @@ class PendaftaranController extends Controller
             'anggota.*.kontak'        => 'required_with:anggota|numeric|digits_between:8,20',
             'anggota.*.alamat'        => 'required_with:anggota|string',
 
-            'dokumen'          => 'nullable|array',
-            'dokumen.*'        => 'nullable|file|max:5120',
+            'dokumen'          => $pendaftaran ? 'nullable|array' : 'required|array|min:1',
+            'dokumen.*'        => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
             'tipe_dokumen'     => 'required|array',
             'tipe_dokumen.*'   => 'required|string',
         ];
@@ -93,16 +93,17 @@ class PendaftaranController extends Controller
                 $pendaftaran->anggota()->delete();
             }
 
-
             if ($request->hasFile('dokumen')) {
                 foreach ($request->file('dokumen') as $key => $file) {
-                    $path = $file->store('pendaftaran/dokumen', 'public');
-                    Dokumen::create([
-                        'pendaftaran_id' => $pendaftaran->id,
-                        'tipe_dokumen'   => $request->tipe_dokumen[$key] ?? 'Lainnya',
-                        'nama_dokumen'   => $file->getClientOriginalName(),
-                        'file_path'      => $path
-                    ]);
+                    if ($file->isValid()) {
+                        $path = $file->store('pendaftaran/dokumen', 'public');
+                        Dokumen::create([
+                            'pendaftaran_id' => $pendaftaran->id,
+                            'tipe_dokumen'   => $request->tipe_dokumen[$key] ?? 'Lainnya',
+                            'nama_dokumen'   => $file->getClientOriginalName(),
+                            'file_path'      => $path
+                        ]);
+                    }
                 }
             }
 
