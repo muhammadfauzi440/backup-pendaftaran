@@ -17,6 +17,14 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-600 rounded-r-2xl">
+                <p class="text-red-600 font-bold text-xs uppercase tracking-widest">
+                    {{ session('error') }}
+                </p>
+            </div>
+        @endif
+
         <div class="bg-white border-2 border-gray-50 p-8 rounded-[2.5rem] shadow-sm mb-10">
             <form action="{{ route('admin.instansi.store') }}" method="POST">
                 @csrf

@@ -45,7 +45,7 @@ class InstansiController extends Controller
         $validated = $request->validate([
             'nama_instansi' => 'required|string|max:255|unique:instansis,nama_instansi,' . $id,
             'alamat_instansi' => 'required|string',
-            'kontak_instansi' => 'required|string',
+            'kontak_instansi' => 'required|string|min:8',
             'tipe' => 'required|in:sekolah,universitas',
         ]);
 
@@ -60,9 +60,9 @@ class InstansiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_instansi' => 'required|unique:instansis',
-            'alamat_instansi' => 'required',
-            'kontak_instansi' => 'required',
+            'nama_instansi' => 'required|unique:instansis|string|max:255',
+            'alamat_instansi' => 'required|string',
+            'kontak_instansi' => 'required|string|min:8',
             'tipe' => 'required|in:sekolah,universitas',
         ]);
 
