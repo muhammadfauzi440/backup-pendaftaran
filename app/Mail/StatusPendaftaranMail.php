@@ -40,7 +40,7 @@ class StatusPendaftaranMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.status.pendaftaran',
+            view: 'emails.status_pendaftaran',
         );
     }
 

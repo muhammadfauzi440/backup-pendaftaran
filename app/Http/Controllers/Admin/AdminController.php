@@ -174,7 +174,7 @@ class AdminController extends Controller
         try {
             Mail::to($pendaftaran->user->email)->send(new StatusPendaftaranMail($pendaftaran));
             return redirect()->route('admin.pendaftaran.index')
-                ->with('success', "Status pendaftaranberhasil diubah menjadi {$request->status} dan email notifikasi telah dikirim ke {$pendaftaran->user->email}.");
+                ->with('success', "Status pendaftaran berhasil diubah menjadi {$request->status} dan email notifikasi telah dikirim ke {$pendaftaran->user->email}.");
         } catch (\Exception $e) {
             return redirect()->route('admin.pendaftaran.index')
                 ->with('error', "Status berhasil diubah, TETAPI gagal mengirim email notifikasi. Error: " . $e->getMessage());
