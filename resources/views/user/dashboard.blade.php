@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard | PT GI</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/daftar.js', 'resources/js/kelompok.js'])
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js',
+        'resources/js/daftar.js',
+        'resources/js/kelompok.js',
+        'resources/js/copy.js'
+    ])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -104,6 +110,26 @@
                                         ● STATUS: {{ $pendaftaran->status }}
                                     </div>
 
+                                    <div class="mb-6 p-5 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex justify-between items-center group hover:border-red-300 transition-colors">
+                                        <div>
+                                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Kode
+                                                Pendaftaran Anda</span>
+                                            <span class="text-2xl font-black text-gray-900 tracking-widest" id="kode-pendaftaran">{{ $pendaftaran->kode_pendaftaran ?? '-' }}</span>
+                                        </div>
+                                        <button id="btn-copy-kode"
+                                            class="p-3 bg-white border border-gray-200 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shadow-sm text-gray-500 flex items-center gap-2"
+                                            title="Salin Kode Pendaftaran">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                            <span
+                                                class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Salin</span>
+                                        </button>
+                                    </div>
+
                                     <div class="space-y-4 mt-2">
                                         <div class="flex justify-between border-b border-gray-50 pb-3 items-end">
                                             <span class="text-gray-400 text-xs font-bold uppercase">Nama Pendaftar /
@@ -190,7 +216,8 @@
                                         Bantuan</h2>
                                     <p class="text-sm leading-relaxed text-gray-300 mb-8 font-medium">Jika Anda
                                         mengalami kendala saat mendaftar atau memiliki pertanyaan mengenai proses
-                                        seleksi magang,<br> <span class="font-bold text-red-600">Admin</span> siap membantu Anda.</p>
+                                        seleksi magang,<br> <span class="font-bold text-red-600">Admin</span> siap
+                                        membantu Anda.</p>
                                 </div>
 
                                 <a href="https://wa.me/6287782521039" target="_blank"

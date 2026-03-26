@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/js/scroll.js',
                 'resources/js/daftar.js',
                 'resources/js/kelompok.js',
+                'resources/js/copy.js',
             ],
             refresh: true,
         }),
