@@ -233,6 +233,7 @@ class AdminController extends Controller
             DB::beginTransaction();
             $pendaftarans = Pendaftaran::with('dokumen')->whereIn('id', $request->ids)->get();
 
+            /** @var \App\Models\Pendaftaran $pendaftaran */
             foreach ($pendaftarans as $pendaftaran) {
                 foreach ($pendaftaran->dokumen as $dok) {
                     Storage::disk('public')->delete($dok->file_path);
