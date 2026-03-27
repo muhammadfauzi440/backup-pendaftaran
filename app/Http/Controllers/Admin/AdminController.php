@@ -17,12 +17,24 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pendaftarans = Pendaftaran::with(['user', 'instansi', 'dokumen'])
-            ->latest()
-            ->paginate(10);
+        $query = Pendaftaran::with(['user', 'instansi', 'dokumen'])->latest();
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($subQ) use ($search) {
+                    $subQ->where('name', 'like', "%{$search}%");
+                })->orWhere('nim_nisn', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $pendaftarans = $query->paginate(10)->withQueryString();
         return view('admin.pendaftaran.index', compact('pendaftarans'));
     }
 
@@ -39,7 +51,6 @@ class AdminController extends Controller
 
         return view('admin.pendaftaran.edit', compact('pendaftaran', 'instansis'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -181,17 +192,61 @@ class AdminController extends Controller
         }
     }
 
-    public function exportPdf()
+    public function exportExcel(Request $request)
     {
-        $pendaftarans = Pendaftaran::with(['user', 'instansi'])->latest()->get();
+        // Parameter pencarian sekarang dikirim ke class Export
+        return Excel::download(new PendaftaranExport($request->search, $request->status), 'laporan-pendaftaran-' . date('Y-m-d') . '.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Pendaftaran::with(['user', 'instansi'])->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($subQ) use ($search) {
+                    $subQ->where('name', 'like', "%{$search}%");
+                })->orWhere('nim_nisn', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $pendaftarans = $query->get();
         $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftarans'))
             ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-pendaftaran-' . now()->format('Y-m-d') . '.pdf');
     }
 
-    public function exportExcel()
+    public function bulkDestroy(Request $request)
     {
-        return Excel::download(new PendaftaranExport, 'laporan-pendaftaran-' . date('Y-m-d') . '.xlsx');
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:pendaftarans,id'
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $pendaftarans = Pendaftaran::with('dokumen')->whereIn('id', $request->ids)->get();
+
+            foreach ($pendaftarans as $pendaftaran) {
+                foreach ($pendaftaran->dokumen as $dok) {
+                    Storage::disk('public')->delete($dok->file_path);
+                    $dok->delete();
+                }
+                $pendaftaran->delete();
+            }
+
+            DB::commit();
+            return redirect()->route('admin.pendaftaran.index')
+                ->with('success', count($request->ids) . ' data pendaftaran dan berkasnya berhasil dihapus massal.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal melakukan hapus massal: ' . $e->getMessage());
+        }
     }
 }

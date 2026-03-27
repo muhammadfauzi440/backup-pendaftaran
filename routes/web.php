@@ -49,6 +49,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/kelola-pendaftaran/{id}/edit', [AdminController::class, 'edit'])->name('admin.pendaftaran.edit');
     Route::put('/admin/kelola-pendaftaran/{id}', [AdminController::class, 'update'])->name('admin.pendaftaran.update');
     Route::delete('/admin/kelola-pendaftaran/{id}', [AdminController::class, 'destroy'])->name('admin.pendaftaran.destroy');
+    Route::delete('/admin/kelola-pendaftaran/bulk-delete', [AdminController::class, 'bulkDestroy'])->name('admin.pendaftaran.bulkDestroy');
     Route::post('/admin/kelola-pendaftaran/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.pendaftaran.updateStatus');
 
     Route::get('/admin/users', [ProfileController::class, 'index'])->name('admin.users.index');
