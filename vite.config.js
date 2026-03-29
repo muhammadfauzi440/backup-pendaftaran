@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/daftar.js',
                 'resources/js/kelompok.js',
                 'resources/js/copy.js',
+                'resources/js/bulk-delete.js',
             ],
             refresh: true,
         }),
