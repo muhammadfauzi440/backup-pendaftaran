@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class PendaftaranController extends Controller
 {
@@ -31,6 +32,10 @@ class PendaftaranController extends Controller
     {
         $user = Auth::user();
         $pendaftaran = Pendaftaran::where('user_id', $user->id)->first();
+
+        if ($pendaftaran) {
+            Gate::authorize('update', $pendaftaran);
+        }
 
         $rules = [
             'instansi_id'      => 'required|exists:instansis,id',

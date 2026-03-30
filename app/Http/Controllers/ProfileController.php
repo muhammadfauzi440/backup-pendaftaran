@@ -7,12 +7,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-
+use Illuminate\Support\Facades\Gate;
 class ProfileController extends Controller
 {
     public function index()
     {   
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role == 'admin') {
             $allUsers = User::where('id', '!=', $user->id)->orderBy('role', 'asc')->get();
@@ -65,10 +65,12 @@ class ProfileController extends Controller
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        $userToDelete = User::findOrFail($id);
 
-        return back()->with('success', 'Pengguna berhasil dihapus');
+        Gate::authorize('delete', $userToDelete);
+
+        $userToDelete->delete();
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus beserta seluruh data');
     }
 
     public function editUser($id)

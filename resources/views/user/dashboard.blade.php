@@ -166,10 +166,18 @@
                                         </div>
 
                                         <div class="pt-6">
-                                            <a href="/user/daftar"
-                                                class="inline-block bg-red-600 text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 transform hover:-translate-y-1">
-                                                Lihat Formulir Detail &rarr;
-                                            </a>
+                                            @can('update', $pendaftaran)
+                                                <a href="/user/daftar" class="inline-block bg-red-600 text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 transform hover:-translate-y-1">
+                                                    Edit / Lihat Formulir &rarr;
+                                                </a>
+                                            @else   
+                                                <button disabled class="inline-block bg-gray-200 text-gray-500 cursot-not-allowed px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-[0.2rem] shadow-sm">
+                                                    Formulir Terkunci (Sedang Diproses/Selesai)
+                                                </button>
+                                                <p class="text-xs font-bold text-gray-400 mt-3">
+                                                    *Anda tidak dapat lagi mengubah data pendaftaran karena status sudah bukan "Pending"
+                                                </p>
+                                            @endcan
                                         </div>
                                     </div>
                                 @else
@@ -197,10 +205,6 @@
                                 class="md:col-span-2 bg-gray-900 p-8 rounded-[2.5rem] shadow-2xl text-white flex flex-col justify-between relative overflow-hidden group">
                                 <div
                                     class="absolute -right-6 -top-6 opacity-5 group-hover:opacity-10 transition-opacity duration-500 transform rotate-12">
-                                    <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            d="M12 0a12 12 0 00-3.537 23.472l3.666-1.155A11.95 11.95 0 0112 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.823a9.78 9.78 0 01-4.992-1.353l-.358-.212-2.484.783.664-2.424-.233-.37A9.78 9.78 0 012.18 12c0-5.414 4.406-9.82 9.82-9.82 5.414 0 9.82 4.406 9.82 9.82 0 5.414-4.406 9.82-9.82 9.82z" />
-                                    </svg>
                                 </div>
 
                                 <div class="relative z-10">
