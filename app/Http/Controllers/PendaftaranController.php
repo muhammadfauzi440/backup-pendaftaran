@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
+use App\Mail\KodePendaftaranMail;
+use Illuminate\Support\Facades\Mail;
 
 class PendaftaranController extends Controller
 {
@@ -85,10 +87,13 @@ class PendaftaranController extends Controller
             $data['user_id'] = $user->id;
             $data['durasi_bulan'] = $durasi ?? 0;
 
+            $isNewRegistration = false;
+
             if ($pendaftaran) {
                 $pendaftaran->update($data);
             } else {
                 $pendaftaran = Pendaftaran::create($data);
+                $isNewRegistration = true;
             }
 
             if ($request->tipe_pendaftaran === 'kelompok' && $request->has('anggota')) {
@@ -113,7 +118,19 @@ class PendaftaranController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('user.dashboard')->with('success', 'Data pendaftaran berhasil disimpan.');
+
+            if ($isNewRegistration) {
+                try {
+                    $pendaftaran->refresh();
+                    Mail::to($user->email)->send(new KodePendaftaranMail($pendaftaran));
+                    return redirect()->route('user.dashboard')->with('success', 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke email Anda.');
+                } catch (\Exception $e) {
+                    return redirect()->route('user.dashboard')->with('success', 'Pendaftaran berhasil disubmit TETAPI sistem gagal mengirim kode ke email Anda. Silahkan salin kode langsung dari Dashboard');
+                }
+            }
+
+            return redirect()->route('user.dashboard')->with('success', 'Data formulir berhasil diperbarui');
+            
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal: ' . $e->getMessage());
