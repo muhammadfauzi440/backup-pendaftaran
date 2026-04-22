@@ -90,7 +90,7 @@ class AuthController extends Controller
 
         $token = Str::random(64);
 
-        DB::table('password_reset_token')->updateOrInsert(
+        DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $request->email],
             ['token' => $token, 'created_at' => Carbon::now()]
         );
