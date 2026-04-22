@@ -35,6 +35,13 @@ Route::post('/register', [AuthController::class, 'register_proses']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/lupa-password', [AuthController::class, 'forgot_password_form'])->name('password.request');
+Route::post('/lupa-password', [AuthController::class, 'forgot_password_proses'])->name('password.email');
+
+Route::get('/reset-password/{token}', [AuthController::class, 'reset_password_form'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'reset_password_proses'])->name('password.update');
+
+
 Route::middleware('throttle:5,1')->group(function () {
     Route::get('/cek-status/{kode}', [PendaftaranController::class, 'cekStatusPublic']);
 });

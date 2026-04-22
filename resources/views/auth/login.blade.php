@@ -73,6 +73,13 @@
                         placeholder="••••••••" required autocomplete="current-password">
                 </div>
 
+                <div class="flex justify-end mb-4">
+                    <a href="{{ route('password.request') }}"
+                        class="text-[9px] font-bold text-gray-400 hover:text-red-600 uppercase tracking-widest transition-colors">
+                        Lupa Kata Sandi?
+                    </a>
+                </div>
+
                 <button type="submit"
                     class="w-full py-4 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-all transform hover:-translate-y-1 shadow-lg shadow-gray-900/20 uppercase tracking-widest text-xs">
                     Masuk Sekarang
