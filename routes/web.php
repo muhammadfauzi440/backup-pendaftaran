@@ -46,6 +46,8 @@ Route::middleware('throttle:5,1')->group(function () {
     Route::get('/cek-status/{kode}', [PendaftaranController::class, 'cekStatusPublic']);
 });
 
+
+//Route ke Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
 
@@ -69,6 +71,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/export/pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
 });
 
+//Route ke Pengguna
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index_user'])->name('user.dashboard');
     Route::get('/user/daftar', [PendaftaranController::class, 'index'])->name('user.daftar');
@@ -77,4 +80,5 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
+    Route::get('/user/cetak-surat', [DashboardController::class, 'cetakSurat'])->name('user.cetak-surat');
 });

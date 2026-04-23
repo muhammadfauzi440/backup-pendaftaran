@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
@@ -60,5 +61,19 @@ class DashboardController extends Controller
         $pendaftaran = Pendaftaran::where('user_id', $user->id)->first();
 
         return view('user.dashboard', compact('pendaftaran'));
+    }
+
+    public function cetakSurat()
+    {
+        $user = auth()->user();
+        $pendaftaran = Pendaftaran::with('instansi')->where('user_id', $user->id)->first();
+
+        if (!$pendaftaran || $pendaftaran->status !== 'diterima') {
+            abort(403, 'Akses ditolak. surat hanya dapat dicetak bagi pendafaftar yang sudah diterima.');
+        }
+
+        $pdf = Pdf::loadView('user.surat-balasan', compact('pendaftaran', 'user'));
+        $namaFile = 'Surat_Penerimaan_Magang_' . str_replace(' ', '_', $user->name) . '.pdf';
+        return $pdf->download($namaFile);
     }
 }

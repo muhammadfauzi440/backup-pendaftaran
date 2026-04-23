@@ -110,6 +110,20 @@
                                         ● STATUS: {{ $pendaftaran->status }}
                                     </div>
 
+                                    @if ($pendaftaran->status == 'diterima')
+                                        <div class="mt-2 mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+                                            <div>
+                                                <h3 class="text-emerald-800 font-black text-sm uppercase tracking-widest">Selamat! Anda Diterima</h3>
+                                                <p class="text-emerald-600 text-[10px] font-bold mt-1">Unduh Surat Balasan/LoA untuk diserahkan ke instansi Anda.</p>
+                                            </div>
+                                            <a href="{{ route('user.cetak-surat') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-600/30 transition transform hover:-translate-y-1 flex items-center gap-2">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                Download PDF
+                                            </a>
+                                        </div>
+                                    @endif
+                                    
+
                                     <div class="mb-6 p-5 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex justify-between items-center group hover:border-red-300 transition-colors">
                                         <div>
                                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Kode
