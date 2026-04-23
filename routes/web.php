@@ -28,10 +28,10 @@ Route::get('/test-email', function() {
 
 
 Route::get('/login', [AuthController::class, 'login_form'])->name('login');
-Route::post('/login', [AuthController::class, 'login_proses']);
+Route::post('/login', [AuthController::class, 'login_proses'])->middleware('throttle:5,1');
 
 Route::get('/register', [AuthController::class, 'register_form'])->name('register');
-Route::post('/register', [AuthController::class, 'register_proses']);
+Route::post('/register', [AuthController::class, 'register_proses'])->middleware('throttle:5,1');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

@@ -75,7 +75,7 @@
 
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('password.request') }}"
-                        class="text-[9px] font-bold text-gray-400 hover:text-red-600 uppercase tracking-widest transition-colors">
+                        class="underline text-[9px] font-bold text-gray-400 hover:text-red-600 uppercase tracking-widest transition-colors">
                         Lupa Kata Sandi?
                     </a>
                 </div>
@@ -89,7 +89,7 @@
             <div class="mt-8 pt-6 border-t border-gray-50 relative z-10">
                 <p class="text-xs text-gray-400 font-medium">Belum memiliki akun? <br>
                     <a href="{{ route('register') }}"
-                        class="text-red-600 font-bold hover:text-red-700 transition-colors inline-block mt-1">Daftar
+                        class="text-red-600 underline font-bold hover:text-red-700 transition-colors inline-block mt-1">Daftar
                         Akun Peserta</a>
                 </p>
             </div>
