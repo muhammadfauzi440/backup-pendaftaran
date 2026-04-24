@@ -69,7 +69,7 @@ class DashboardController extends Controller
         $pendaftaran = Pendaftaran::with('instansi')->where('user_id', $user->id)->first();
 
         if (!$pendaftaran || $pendaftaran->status !== 'diterima') {
-            abort(403, 'Akses ditolak. surat hanya dapat dicetak bagi pendafaftar yang sudah diterima.');
+            abort(403, 'Akses ditolak. surat hanya dapat dicetak bagi pendaftar yang sudah diterima.');
         }
 
         $pdf = Pdf::loadView('user.surat-balasan', compact('pendaftaran', 'user'));
