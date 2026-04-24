@@ -14,6 +14,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
 use App\Mail\StatusPendaftaranMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use App\Models\AuditLog;
 
 class AdminController extends Controller
 {
@@ -150,11 +152,18 @@ class AdminController extends Controller
     {
         try {
             DB::beginTransaction();
-            $pendaftaran = Pendaftaran::with('dokumen')->findOrFail($id);
+            $pendaftaran = Pendaftaran::with(['dokumen', 'user'])->findOrFail($id);
 
             foreach ($pendaftaran->dokumen as $dok) {
                 Storage::disk('public')->delete($dok->file_path);
             }
+
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'Hapus Pendaftaran',
+                'description' => "Admin menghapus data pendaftaran milik " . ($pendaftaran->user->name ?? 'User Terhapus') . " (Kode: {$pendaftaran->kode_pendaftaran})",
+                'ip_address' => request()->ip()
+            ]);
 
             $pendaftaran->dokumen()->delete();
             $pendaftaran->delete();
@@ -180,6 +189,13 @@ class AdminController extends Controller
         $pendaftaran->update([
             'status' => $request->status,
             'catatan_admin' => $request->catatan_admin,
+        ]);
+
+        AuditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Update Status Pendaftaran',
+            'description' => "Admin mengubah status pendaftaran milik {$pendaftaran->user->name} (Kode: {$pendaftaran->kode_pendaftaran}) menjadi " . strtoupper($request->status),
+            'ip_address' => $request->ip()
         ]);
 
         try {
@@ -250,4 +266,6 @@ class AdminController extends Controller
             return back()->with('error', 'Gagal melakukan hapus massal: ' . $e->getMessage());
         }
     }
+
+
 }
