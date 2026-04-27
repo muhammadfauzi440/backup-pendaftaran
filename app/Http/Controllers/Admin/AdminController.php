@@ -267,5 +267,9 @@ class AdminController extends Controller
         }
     }
 
-
+    public function auditLogs()
+    {
+        $logs = AuditLog::with('user')->latest()->paginate(20);
+        return view('admin.audit-logs.index', compact('logs'));
+    }
 }

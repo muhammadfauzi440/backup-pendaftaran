@@ -5,15 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | PT Global Intermedia</title>
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js',
-        'resources/js/bulk-delete.js'
-    ])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/bulk-delete.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -69,6 +65,16 @@
                 <span x-show="sidebarOpen" class="font-bold whitespace-nowrap">Akun</span>
             </a>
 
+            <a href="{{ route('admin.audit-logs.index') }}"
+                class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('admin.audit-logs.*') ? 'bg-red-600 text-white' : 'text-gray-400 hover:bg-gray-800' }} rounded-xl transition">
+                <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.audit-logs.*') ? 'text-white' : '' }}"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span x-show="sidebarOpen" class="font-bold whitespace-nowrap">Audit Log</span>
+            </a>
+
 
             <form action="{{ route('logout') }}" method="POST" class="pb-6">
                 @csrf
@@ -110,7 +116,7 @@
                         <label for="tahunFilter" class="text-sm font-semibold text-gray-700">Filter Tahun:</label>
                         <select id="tahunFilter" onchange="filterTahun(this.value)"
                             class="px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                            @foreach($allYears as $tahun)
+                            @foreach ($allYears as $tahun)
                                 <option value="{{ $tahun }}" {{ $tahun == $selectedYear ? 'selected' : '' }}>
                                     Tahun {{ $tahun }}
                                 </option>
@@ -146,13 +152,15 @@
                                 <div>
                                     <div class="flex justify-between items-center mb-1">
                                         <span class="text-xs font-semibold text-gray-700">{{ $kategori }}</span>
-                                        <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">{{ $total }}</span>
+                                        <span
+                                            class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">{{ $total }}</span>
                                     </div>
                                     <div class="w-full bg-gray-200 rounded h-1.5">
-                                        <div class="bg-blue-600 h-1.5 rounded transition-all duration-300" 
-                                             style="width: {{ ($total / $stats['total']) * 100 }}%"></div>
+                                        <div class="bg-blue-600 h-1.5 rounded transition-all duration-300"
+                                            style="width: {{ ($total / $stats['total']) * 100 }}%"></div>
                                     </div>
-                                    <div class="text-[10px] text-gray-500 mt-0.5">{{ round(($total / $stats['total']) * 100) }}%</div>
+                                    <div class="text-[10px] text-gray-500 mt-0.5">
+                                        {{ round(($total / $stats['total']) * 100) }}%</div>
                                 </div>
                             @empty
                                 <p class="text-gray-500 text-center text-xs py-2">No data</p>
@@ -161,7 +169,8 @@
                     </div>
 
                     <div class="bg-white rounded-lg border border-gray-100 shadow-sm p-4 col-span-2">
-                        <h3 class="text-sm font-bold text-gray-900 mb-3">Pendaftar Per Bulan (Tahun {{ $selectedYear }}) - Januari hingga Desember</h3>
+                        <h3 class="text-sm font-bold text-gray-900 mb-3">Pendaftar Per Bulan (Tahun
+                            {{ $selectedYear }}) - Januari hingga Desember</h3>
                         <div class="grid grid-cols-6 gap-2">
                             @php
                                 $maxCount = max(array_column($monthlyChartData, 'count'));
@@ -169,10 +178,12 @@
                             @forelse($monthlyChartData as $monthData)
                                 <div class="text-center">
                                     <div class="flex flex-col items-center gap-1">
-                                        <span class="text-xs font-bold text-gray-700 h-4">{{ $monthData['label'] }}</span>
+                                        <span
+                                            class="text-xs font-bold text-gray-700 h-4">{{ $monthData['label'] }}</span>
                                         <div class="w-full bg-gray-200 rounded h-16 flex items-end justify-center">
-                                            <div class="bg-green-500 w-full rounded transition-all duration-300" 
-                                                 style="height: {{ $maxCount > 0 ? ($monthData['count'] / $maxCount) * 100 : 0 }}%; min-height: 2px;"></div>
+                                            <div class="bg-green-500 w-full rounded transition-all duration-300"
+                                                style="height: {{ $maxCount > 0 ? ($monthData['count'] / $maxCount) * 100 : 0 }}%; min-height: 2px;">
+                                            </div>
                                         </div>
                                         <span class="text-xs font-bold text-gray-900">{{ $monthData['count'] }}</span>
                                     </div>
@@ -191,7 +202,7 @@
                                 $percent = $total > 0 ? round(($total / $stats['total']) * 100) : 0;
                                 $colors = [
                                     'SMK' => 'bg-purple-50 text-purple-900 border-purple-200',
-                                    'UNIVERSITAS' => 'bg-indigo-50 text-indigo-900 border-indigo-200'
+                                    'UNIVERSITAS' => 'bg-indigo-50 text-indigo-900 border-indigo-200',
                                 ];
                                 $bgColor = $colors[$kategori] ?? 'bg-gray-50 text-gray-900 border-gray-200';
                             @endphp

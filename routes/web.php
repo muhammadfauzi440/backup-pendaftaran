@@ -69,6 +69,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/admin/export/excel', [AdminController::class, 'exportExcel'])->name('admin.export.excel');
     Route::get('/admin/export/pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
+
+    Route::get('/admin/audit-logs', [AdminController::class, 'auditLogs'])->name('admin.audit-logs.index');
 });
 
 //Route ke Pengguna
