@@ -19,7 +19,7 @@ class ProfileController extends Controller
     public function index_user()
     {   
         $user = Auth::user();
-        return view('user.akun', compact('user'));
+        return view('user.akun.index', compact('user'));
     }
 
     public function update(Request $request)
