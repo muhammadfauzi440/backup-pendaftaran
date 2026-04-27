@@ -10,16 +10,16 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Gate;
 class ProfileController extends Controller
 {
-    public function index()
+    public function index_admin()
+    {   
+        $users = User::latest()->get();
+        return view('admin.users.index', compact('users'));
+    }
+
+    public function index_user()
     {   
         $user = Auth::user();
-
-        if ($user->role == 'admin') {
-            $allUsers = User::where('id', '!=', $user->id)->orderBy('role', 'asc')->get();
-            return view('admin.users.index', compact('allUsers'));
-        } else {
-            return view('user.akun', compact('user'));
-        }
+        return view('user.akun', compact('user'));
     }
 
     public function update(Request $request)

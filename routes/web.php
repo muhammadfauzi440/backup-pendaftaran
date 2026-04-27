@@ -61,7 +61,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/kelola-pendaftaran/{id}', [AdminController::class, 'destroy'])->name('admin.pendaftaran.destroy');
     Route::post('/admin/kelola-pendaftaran/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.pendaftaran.updateStatus');
 
-    Route::get('/admin/users', [ProfileController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users', [ProfileController::class, 'index_admin'])->name('admin.users.index');
     Route::get('/admin/users/{id}/edit', [ProfileController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [ProfileController::class, 'updateUser'])->name('admin.users.update');
     Route::post('/admin/users', [ProfileController::class, 'store'])->name('admin.users.store');
@@ -79,7 +79,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/daftar', [PendaftaranController::class, 'index'])->name('user.daftar');
     Route::post('/user/daftar/submit', [PendaftaranController::class, 'storeOrUpdate'])->name('user.daftar.submit');
 
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile', [ProfileController::class, 'index_user'])->name('profile.index');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/user/cetak-surat', [DashboardController::class, 'cetakSurat'])->name('user.cetak-surat');
