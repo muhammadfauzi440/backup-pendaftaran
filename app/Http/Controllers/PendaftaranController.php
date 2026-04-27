@@ -27,7 +27,7 @@ class PendaftaranController extends Controller
         $instansis = Instansi::orderBy('nama_instansi', 'asc')->get();
         $tipe = $request->query('tipe', $pendaftaran ? $pendaftaran->tipe_pendaftaran : 'individu');
 
-        return view('user.daftar', compact('pendaftaran', 'instansis', 'tipe'));
+        return view('user.daftar.index', compact('pendaftaran', 'instansis', 'tipe'));
     }
 
     public function storeOrUpdate(Request $request)
