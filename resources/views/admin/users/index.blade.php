@@ -6,7 +6,7 @@
             <div>
                 <h2 class="text-2xl font-black text-gray-900 uppercase tracking-tighter">Kelola Pengguna</h2>
                 <p class="text-gray-500 font-bold mb-4 uppercase text-[10px] tracking-widest mt-2">
-                    Total: {{ $allUsers->count() }} Pengguna Terdaftar
+                    Total: {{ $users->count() }} Pengguna Terdaftar
                 </p>
             </div>
             <button onclick="toggleModal('modalTambah')"
@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
-                    @foreach ($allUsers as $u)
+                    @foreach ($users as $u)
                         <tr class="hover:bg-gray-50/50 transition-all">
                             <td class="px-8 py-6">
                                 <div class="font-black text-gray-900">{{ $u->name }}</div>

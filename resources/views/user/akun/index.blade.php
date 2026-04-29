@@ -90,11 +90,11 @@
 
             <div class="flex flex-col sm:flex-row gap-4 pt-6 mt-6">
                 <a href="{{ route('user.dashboard') }}"
-                    class="w-full sm:w-1/3 py-4 text-center text-gray-700 font-bold text-sm border border-gray-300 rounded-xl hover:bg-gray-100 transition-all">
+                    class="w-full sm:w-1/3 py-4 text-center text-white font-bold text-sm border border-gray-300 bg-red-600 rounded-xl hover:bg-red-700 transition-all">
                     Batal
                 </a>
                 <button type="submit"
-                    class="w-full sm:w-2/3 py-4 bg-red-600 text-white font-black uppercase text-sm tracking-widest rounded-xl hover:bg-red-700 shadow-lg shadow-red-600/30 transition-all transform hover:-translate-y-1">
+                    class="w-full sm:w-2/3 py-4 bg-gray-900 text-white font-black uppercase text-sm tracking-widest rounded-xl hover:bg-black shadow-lg shadow-gray-900/30 transition-all transform hover:-translate-y-1">
                     Simpan Perubahan
                 </button>
             </div>
