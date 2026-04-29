@@ -36,7 +36,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 axisBorder: { show: false},
                 axisTicks: { show: false}
             },
-            yaxis: { show: false},
+            yaxis: { 
+                show: false,
+                max: function (val) {
+                    return val === 0 ? 10 : val * 1.2;
+                }
+            },
             grid: {
                 borderColor: '#F3F4F6',
                 strokeDashArray: 4,
