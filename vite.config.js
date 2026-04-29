@@ -14,6 +14,7 @@ export default defineConfig({
                 'resources/js/kelompok.js',
                 'resources/js/copy.js',
                 'resources/js/bulk-delete.js',
+                'resources/js/stats.js',
             ],
             refresh: true,
         }),
