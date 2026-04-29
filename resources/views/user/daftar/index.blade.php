@@ -383,7 +383,7 @@
 
             <button type="submit"
                 class="w-full bg-gray-900 text-white py-6 rounded-3xl font-black uppercase tracking-[0.2em] hover:bg-red-600 transition-all shadow-xl hover:shadow-red-500/20">
-                Submit Pendaftaran Sekarang
+                Submit Pendaftaran
             </button>
         </form>
     </div>
