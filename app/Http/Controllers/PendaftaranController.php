@@ -152,7 +152,7 @@ class PendaftaranController extends Controller
             'kode' => 'required|string'
         ]);
 
-        $kode = $request->input('kode');
+        $kode = strtoupper($request->input('kode'));
 
         $pendaftaran = Pendaftaran::with('user')
             ->where('kode_pendaftaran', $kode)

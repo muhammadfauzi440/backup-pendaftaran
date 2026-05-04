@@ -27,7 +27,7 @@ window.cekStatus = function () {
             "Content-Type": "application/json",
             "X-CSRF-TOKEN": csrfToken
         },
-        body: JSON.stringify({ kode })
+        body: JSON.stringify({ kode: kode })
     })
         .then((response) => {
             if (!response.ok)
