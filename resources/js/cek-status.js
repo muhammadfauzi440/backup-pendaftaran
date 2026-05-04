@@ -48,7 +48,7 @@ window.cekStatus = function () {
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Nama Pendaftar</p>
-                            <p class="text-white font-bold text-base">${data.nama}</p>
+                            <p class="text-black text-md font-bold text-base">${data.nama}</p>
                         </div>
                         <div class="px-4 py-1.5 rounded-lg border ${currentStyle} text-[10px] font-black uppercase tracking-widest">
                             ${data.status}
