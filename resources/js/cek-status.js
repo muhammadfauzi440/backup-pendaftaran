@@ -18,12 +18,16 @@ window.cekStatus = function () {
     </div>`;
     container.classList.remove("hidden");
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     fetch(`/cek-status/${kode}`, {
-        method: "GET",
+        method: "POST",
         headers: {
             "X-Requested-With": "XMLHttpRequest",
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken
         },
+        body: JSON.stringify({ kode })
     })
         .then((response) => {
             if (!response.ok)

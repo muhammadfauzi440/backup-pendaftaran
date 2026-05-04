@@ -146,8 +146,14 @@ class PendaftaranController extends Controller
         }
     }
 
-    public function cekStatusPublic($kode)
+    public function cekStatusPublic($kode, Request $request)
     {
+        $request->validate([
+            'kode' => 'required|string'
+        ]);
+
+        $kode = $request->input('kode');
+
         $pendaftaran = Pendaftaran::with('user')
             ->where('kode_pendaftaran', $kode)
             ->first();
