@@ -44,7 +44,7 @@ Route::post('/reset-password', [AuthController::class, 'reset_password_proses'])
 Route::view('/cek-status', 'cek-status')->name('cek-status.index');
 
 Route::middleware('throttle:5,1')->group(function () {
-    Route::post('/cek-status/{kode}', [PendaftaranController::class, 'cekStatusPublic']);
+    Route::post('/cek-status', [PendaftaranController::class, 'cekStatusPublic']);
 });
 
 
