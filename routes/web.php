@@ -41,6 +41,7 @@ Route::post('/lupa-password', [AuthController::class, 'forgot_password_proses'])
 Route::get('/reset-password/{token}', [AuthController::class, 'reset_password_form'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'reset_password_proses'])->name('password.update');
 
+Route::view('/cek-status', 'cek-status')->name('cek-status.index');
 
 Route::middleware('throttle:5,1')->group(function () {
     Route::get('/cek-status/{kode}', [PendaftaranController::class, 'cekStatusPublic']);
