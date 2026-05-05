@@ -18,7 +18,9 @@ class AuthController extends Controller
     public function login_form()
     {
         if (Auth::check()) {
-            return view('auth.confirm_login');
+            // BUG #13 Fix: redirect langsung ke dashboard, bukan tampilkan halaman konfirmasi
+            $role = Auth::user()->role;
+            return redirect()->route($role === 'admin' ? 'admin.dashboard' : 'user.dashboard');
         }
 
         return view('auth.login');

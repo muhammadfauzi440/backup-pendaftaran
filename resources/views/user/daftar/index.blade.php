@@ -333,6 +333,8 @@
                         @foreach ($pendaftaran->dokumen as $index => $dok)
                             <div
                                 class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-6 rounded-2xl border-2 border-gray-100 items-end relative">
+                                {{-- BUG #10 Fix: Simpan dokumen_id agar controller tahu dokumen mana yang diupdate --}}
+                                <input type="hidden" name="dokumen_id[]" value="{{ $dok->id }}">
                                 <div>
                                     <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Jenis
                                         Dokumen</label>
@@ -345,7 +347,7 @@
                                     <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">File Saat Ini:
                                         <span class="text-red-600">{{ $dok->nama_dokumen }}</span></label>
                                     <div class="flex items-center gap-3">
-                                        <input type="file" name="dokumen[]"
+                                        <input type="file" name="dokumen_{{ $dok->id }}"
                                             class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-red-50 file:text-red-700">
 
                                         @if ($index > 0)

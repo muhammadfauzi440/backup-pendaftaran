@@ -85,7 +85,12 @@ class PendaftaranController extends Controller
             $selesai = \Carbon\Carbon::parse($request->tanggal_selesai);
             $durasi = (int) $mulai->diffInMonths($selesai);
 
-            $data = $request->except(['dokumen', 'tipe_dokumen', 'anggota']);
+            // Security Fix: exclude status & catatan_admin agar user tidak
+            // bisa memanipulasi status pendaftarannya sendiri via form
+            $data = $request->except([
+                'dokumen', 'tipe_dokumen', 'anggota',
+                'status', 'catatan_admin', 'dokumen_id',
+            ]);
 
             $data['user_id'] = $user->id;
             $data['durasi_bulan'] = $durasi ?? 0;
@@ -106,25 +111,39 @@ class PendaftaranController extends Controller
                 $pendaftaran->anggota()->delete();
             }
 
-            if ($request->hasFile('dokumen')) {
-                $oldDokumens = Dokumen::where('pendaftaran_id', $pendaftaran->id)->get();
-
-                foreach ($oldDokumens as $oldDokumen) {
-                    if (Storage::disk('public')->exists($oldDokumen->file_path)) {
-                        Storage::disk('public')->delete($oldDokumen->file_path);
+            // BUG #10 Fix: Gunakan nama field dokumen_ID spesifik per dokumen
+            // agar tidak ada ketidaksesuaian index antara tipe_dokumen[] dan dokumen[]
+            if (!empty($request->dokumen_id)) {
+                // Mode edit: replace dokumen lama yang dipilih user
+                foreach ($request->dokumen_id as $idx => $dokId) {
+                    $fieldName = 'dokumen_' . $dokId;
+                    if ($request->hasFile($fieldName) && $request->file($fieldName)->isValid()) {
+                        $oldDok = Dokumen::find($dokId);
+                        if ($oldDok) {
+                            // Hapus file lama dari storage
+                            if (Storage::disk('public')->exists($oldDok->file_path)) {
+                                Storage::disk('public')->delete($oldDok->file_path);
+                            }
+                            // Simpan file baru
+                            $path = $request->file($fieldName)->store('pendaftaran/dokumen', 'public');
+                            $oldDok->update([
+                                'file_path'    => $path,
+                                'nama_dokumen' => $request->file($fieldName)->getClientOriginalName(),
+                            ]);
+                        }
                     }
                 }
-
-                Dokumen::where('pendaftaran_id', $pendaftaran->id)->delete();
-
+            } elseif ($request->hasFile('dokumen')) {
+                // Mode baru: upload semua dokumen sekaligus (pendaftaran pertama kali)
+                $tipeList = $request->tipe_dokumen ?? [];
                 foreach ($request->file('dokumen') as $key => $file) {
                     if ($file->isValid()) {
                         $path = $file->store('pendaftaran/dokumen', 'public');
                         Dokumen::create([
                             'pendaftaran_id' => $pendaftaran->id,
-                            'tipe_dokumen' => $request->tipe_dokumen[$key] ?? 'Lainnya',
-                            'nama_dokumen' => $file->getClientOriginalName(),
-                            'file_path' => $path,
+                            'tipe_dokumen'   => $tipeList[$key] ?? 'Lainnya',
+                            'nama_dokumen'   => $file->getClientOriginalName(),
+                            'file_path'      => $path,
                         ]);
                     }
                 }

@@ -11,13 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 class Pendaftaran extends Model
 {
-    protected $guarded = ['id'];
     protected $table = 'pendaftarans';
     protected $fillable = [
         'user_id',
         'instansi_id',
         'kode_pendaftaran',
-        'tipe_pendaftaran',
+        'tipe_pendaftaran', // BUG #12 Fix: ditambahkan agar tidak bergantung pada $guarded
         'kategori',
         'nim_nisn',
         'kelas_semester',
@@ -68,9 +67,19 @@ class Pendaftaran extends Model
     {
         parent::booted();
 
-        static::creating(function($pendaftaran){
+        static::creating(function ($pendaftaran) {
             if (empty($pendaftaran->kode_pendaftaran)) {
                 $pendaftaran->kode_pendaftaran = 'GIN-' . strtoupper(str()->random(8));
+            }
+        });
+
+        // BUG #9 Fix: Hapus file fisik dokumen saat pendaftaran dihapus via Eloquent
+        // Ini mencegah file orphan di storage ketika destroy() dipanggil
+        static::deleting(function ($pendaftaran) {
+            foreach ($pendaftaran->dokumen as $dok) {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($dok->file_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($dok->file_path);
+                }
             }
         });
     }
