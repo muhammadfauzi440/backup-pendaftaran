@@ -186,18 +186,28 @@ class AdminController extends Controller
 
         $pendaftaran = Pendaftaran::with('user')->findOrFail($id);
 
-        $pendaftaran->update([
-            'status' => $request->status,
-            'catatan_admin' => $request->catatan_admin,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        AuditLog::create([
-            'user_id' => Auth::id(),
-            'action' => 'Update Status Pendaftaran',
-            'description' => "Admin mengubah status pendaftaran milik {$pendaftaran->user->name} (Kode: {$pendaftaran->kode_pendaftaran}) menjadi " . strtoupper($request->status),
-            'ip_address' => $request->ip()
-        ]);
+            $pendaftaran->update([
+                'status' => $request->status,
+                'catatan_admin' => $request->catatan_admin,
+            ]);
 
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'Update Status Pendaftaran',
+                'description' => "Admin mengubah status pendaftaran milik {$pendaftaran->user->name} (Kode: {$pendaftaran->kode_pendaftaran}) menjadi " . strtoupper($request->status),
+                'ip_address' => $request->ip()
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+        }
+
+        // Kirim email di luar transaksi agar kegagalan email tidak me-rollback data
         try {
             Mail::to($pendaftaran->user->email)->send(new StatusPendaftaranMail($pendaftaran));
             return redirect()->route('admin.pendaftaran.index')

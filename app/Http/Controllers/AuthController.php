@@ -115,10 +115,11 @@ class AuthController extends Controller
         $resetRecord = DB::table('password_reset_tokens')
         ->where('email', $request->email)
         ->where('token', $request->token)
+        ->where('created_at', '>=', Carbon::now()->subMinutes(60))
         ->first();
 
         if (!$resetRecord) {
-            return back()->with('error', 'Token tidak valid atau sudah kadaluarsa');
+            return back()->with('error', 'Token tidak valid atau sudah kadaluarsa. Silakan minta link reset password baru.');
         }
 
         User::where('email', $request->email)->update([

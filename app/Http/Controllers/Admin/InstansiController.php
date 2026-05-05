@@ -73,6 +73,13 @@ class InstansiController extends Controller
 
     public function destroy(Instansi $instansi)
     {
+        $jumlahPendaftar = $instansi->pendaftaran()->count();
+
+        if ($jumlahPendaftar > 0) {
+            return redirect()->route('admin.instansi.index')
+                ->with('error', "Instansi \"{$instansi->nama_instansi}\" tidak dapat dihapus karena masih digunakan oleh {$jumlahPendaftar} data pendaftaran.");
+        }
+
         $instansi->delete();
 
         return redirect()->route('admin.instansi.index')->with('success', 'Data Instansi berhasil dihapus');
