@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
                     required>
                 <button type="button"
-                    class="remove-row bg-red-100 text-red-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold hover:bg-red-600 hover:text-white transition flex-shrink-0">
+                    class="remove-row bg-red-100 text-red-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold hover:bg-red-600 hover:text-white transition shrink-0">
                     <span class="mb-1">
                         ×
                     </span>

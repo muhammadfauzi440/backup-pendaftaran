@@ -1,4 +1,4 @@
-let countAnggota = 0;
+let indexAnggota = 0; 
 
 window.tambahAnggotaKel = function(data = null) {
     const wrapper = document.getElementById('wrapper_anggota');
@@ -17,77 +17,98 @@ window.tambahAnggotaKel = function(data = null) {
     const v_kontak = data && data.kontak ? data.kontak : '';
     const v_alamat = data && data.alamat ? data.alamat : '';
 
+    const currentIndex = indexAnggota++; 
+
     const html = `
-        <div class="mb-6 p-6 bg-gray-50 border-2 border-gray-200 rounded-2xl relative">
-            <div class="absolute -top-3 left-4 bg-gray-900 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full">
-                Anggota ${countAnggota + 2}
+        <div class="mb-6 p-6 bg-gray-50 border-2 border-gray-200 rounded-2xl relative anggota-row">
+            <div class="absolute -top-3 left-4 bg-gray-900 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full anggota-label">
+                Anggota Tambahan
             </div>
-            <button type="button" onclick="this.parentElement.remove()" class="absolute top-4 right-4 text-red-500 font-bold hover:text-red-700 transition">
+            <button type="button" onclick="hapusAnggotaKel(this)" class="absolute top-4 right-4 text-red-500 font-bold hover:text-red-700 transition">
                 X
             </button>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                 <div class="md:col-span-2">
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Nama Lengkap</label>
-                    <input type="text" name="anggota[${countAnggota}][nama]" value="${v_nama}" placeholder="Nama Lengkap" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
+                    <input type="text" name="anggota[${currentIndex}][nama]" value="${v_nama}" placeholder="Nama Lengkap" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">NIM / NISN</label>
-                    <input type="text" name="anggota[${countAnggota}][nim_nisn]" value="${v_nim}" placeholder="NIM / NISN" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required inputmode="numeric" pattern="[0-9]*">
+                    <input type="text" name="anggota[${currentIndex}][nim_nisn]" value="${v_nim}" placeholder="NIM / NISN" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required inputmode="numeric" pattern="[0-9]*">
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Jurusan</label>
-                    <input type="text" name="anggota[${countAnggota}][jurusan]" value="${v_jurusan}" placeholder="Jurusan" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
+                    <input type="text" name="anggota[${currentIndex}][jurusan]" value="${v_jurusan}" placeholder="Jurusan" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kelas / Semester</label>
-                    <input type="text" name="anggota[${countAnggota}][kelas_semester]" value="${v_kelas}" placeholder="Kelas / Semester" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
+                    <input type="text" name="anggota[${currentIndex}][kelas_semester]" value="${v_kelas}" placeholder="Kelas / Semester" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Tempat Lahir</label>
-                    <input type="text" name="anggota[${countAnggota}][tempat_lahir]" value="${v_tempat}" placeholder="Tempat Lahir" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
+                    <input type="text" name="anggota[${currentIndex}][tempat_lahir]" value="${v_tempat}" placeholder="Tempat Lahir" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Tanggal Lahir</label>
-                    <input type="date" name="anggota[${countAnggota}][tanggal_lahir]" value="${v_tanggal}" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 text-gray-500" required>
+                    <input type="date" name="anggota[${currentIndex}][tanggal_lahir]" value="${v_tanggal}" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 text-gray-500" required>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Jenis Kelamin</label>
                     <div class="flex gap-6 mt-3">
                         <label class="flex items-center gap-2 font-bold text-gray-600">
-                            <input type="radio" name="anggota[${countAnggota}][jenis_kelamin]" value="laki-laki" ${c_laki} class="text-red-600 focus:ring-red-500" required> Laki-laki
+                            <input type="radio" name="anggota[${currentIndex}][jenis_kelamin]" value="laki-laki" ${c_laki} class="text-red-600 focus:ring-red-500" required> Laki-laki
                         </label>
                         <label class="flex items-center gap-2 font-bold text-gray-600">
-                            <input type="radio" name="anggota[${countAnggota}][jenis_kelamin]" value="perempuan" ${c_perem} class="text-red-600 focus:ring-red-500" required> Perempuan
+                            <input type="radio" name="anggota[${currentIndex}][jenis_kelamin]" value="perempuan" ${c_perem} class="text-red-600 focus:ring-red-500" required> Perempuan
                         </label>
                     </div>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Agama</label>
-                    <input type="text" name="anggota[${countAnggota}][agama]" value="${v_agama}" placeholder="Agama" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
+                    <input type="text" name="anggota[${currentIndex}][agama]" value="${v_agama}" placeholder="Agama" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kontak / WA</label>
-                    <input type="text" name="anggota[${countAnggota}][kontak]" value="${v_kontak}" placeholder="Kontak / WA" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required inputmode="numeric" pattern="[0-9]*">
+                    <input type="text" name="anggota[${currentIndex}][kontak]" value="${v_kontak}" placeholder="Kontak / WA" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required inputmode="numeric" pattern="[0-9]*">
                 </div>
                 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Alamat Lengkap</label>
-                    <textarea name="anggota[${countAnggota}][alamat]" placeholder="Alamat Lengkap" rows="2" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>${v_alamat}</textarea>
+                    <textarea name="anggota[${currentIndex}][alamat]" placeholder="Alamat Lengkap" rows="2" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>${v_alamat}</textarea>
                 </div>
             </div>
         </div>
     `;
+    
     wrapper.insertAdjacentHTML('beforeend', html);
-    countAnggota++;
+    updateLabelAnggota();
+}
+
+window.hapusAnggotaKel = function(button) {
+    const row = button.closest('.anggota-row');
+    if (row) {
+        row.remove();
+        updateLabelAnggota(); 
+    }
+}
+
+function updateLabelAnggota() {
+    const rows = document.querySelectorAll('.anggota-row');
+    rows.forEach((row, index) => {
+        const label = row.querySelector('.anggota-label');
+        if (label) {
+            label.textContent = `Anggota ${index + 2}`;
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -98,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.tambahAnggotaKel(anggota);
             });
         } 
-        else if (countAnggota === 0) {
+        else if (document.querySelectorAll('.anggota-row').length === 0) {
             window.tambahAnggotaKel();
         }
     }

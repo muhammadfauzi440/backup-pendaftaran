@@ -80,8 +80,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/daftar', [PendaftaranController::class, 'index'])->name('user.daftar');
     Route::post('/user/daftar/submit', [PendaftaranController::class, 'storeOrUpdate'])->name('user.daftar.submit');
 
-    Route::get('/profile', [ProfileController::class, 'index_user'])->name('profile.index');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/user/profile', [ProfileController::class, 'index_user'])->name('profile.index');
+    Route::put('/user/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/user/cetak-surat', [DashboardController::class, 'cetakSurat'])->name('user.cetak-surat');
 });
