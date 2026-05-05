@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PendaftaranController extends Controller
 {
@@ -39,7 +40,12 @@ class PendaftaranController extends Controller
         $rules = [
             'instansi_id' => 'required|exists:instansis,id',
             'kategori' => 'required|in:siswa,mahasiswa',
-            'nim_nisn' => 'required|numeric|digits_between:5,30|unique:pendaftarans,nim_nisn,'.($pendaftaran->id ?? 'NULL'),
+            'nim_nisn' => [
+                'required',
+                'numeric',
+                'digits_between:5,30',
+                Rule::unique('pendaftarans', 'nim_nisn')->ignore($pendaftaran?->id),
+            ],
             'kelas_semester' => 'required|string',
             'jurusan' => 'required|string',
             'tanggal_mulai' => 'required|date',
@@ -138,11 +144,10 @@ class PendaftaranController extends Controller
             }
 
             return redirect()->route('user.dashboard')->with('success', 'Data formulir berhasil diperbarui');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->withInput()->with('error', 'Gagal: '.$e->getMessage());
+            return back()->withInput()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }
 

@@ -16,16 +16,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test-email', function() {
-    try {
-        $emailTujuan = 'uzik3580@gmail.com';
-        Mail::to($emailTujuan)->send(new KirimEmailTest());
-        return "Testin email ke {$emailTujuan}. cek inbox";
-    } catch (\Exception $e) {
-        return "Terjadi kesalahan saat mengirim email:" . $e->getMessage();
-    }
-});
-
 
 Route::get('/login', [AuthController::class, 'login_form'])->name('login');
 Route::post('/login', [AuthController::class, 'login_proses'])->middleware('throttle:5,1');
