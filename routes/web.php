@@ -8,10 +8,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
 
-use Illuminate\Support\Facades\Mail;
-use App\Mail\KirimEmailTest;
-
-
 Route::get('/', function () {
     return view('welcome');
 });

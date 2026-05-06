@@ -154,18 +154,13 @@ class AdminController extends Controller
             DB::beginTransaction();
             $pendaftaran = Pendaftaran::with(['dokumen', 'user'])->findOrFail($id);
 
-            foreach ($pendaftaran->dokumen as $dok) {
-                Storage::disk('public')->delete($dok->file_path);
-            }
-
             AuditLog::create([
-                'user_id' => Auth::id(),
-                'action' => 'Hapus Pendaftaran',
-                'description' => "Admin menghapus data pendaftaran milik " . ($pendaftaran->user->name ?? 'User Terhapus') . " (Kode: {$pendaftaran->kode_pendaftaran})",
-                'ip_address' => request()->ip()
+                'user_id'     => Auth::id(),
+                'action'      => 'Hapus Pendaftaran',
+                'description' => 'Admin menghapus data pendaftaran milik ' . ($pendaftaran->user->name ?? 'User Terhapus') . " (Kode: {$pendaftaran->kode_pendaftaran})",
+                'ip_address'  => request()->ip()
             ]);
 
-            $pendaftaran->dokumen()->delete();
             $pendaftaran->delete();
 
             DB::commit();
@@ -207,7 +202,6 @@ class AdminController extends Controller
             return back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
         }
 
-        // Kirim email di luar transaksi agar kegagalan email tidak me-rollback data
         try {
             Mail::to($pendaftaran->user->email)->send(new StatusPendaftaranMail($pendaftaran));
             return redirect()->route('admin.pendaftaran.index')
@@ -220,7 +214,6 @@ class AdminController extends Controller
 
     public function exportExcel(Request $request)
     {
-        // Parameter pencarian sekarang dikirim ke class Export
         return Excel::download(new PendaftaranExport($request->search, $request->status), 'laporan-pendaftaran-' . date('Y-m-d') . '.xlsx');
     }
 
@@ -259,12 +252,7 @@ class AdminController extends Controller
             DB::beginTransaction();
             $pendaftarans = Pendaftaran::with('dokumen')->whereIn('id', $request->ids)->get();
 
-            /** @var \App\Models\Pendaftaran $pendaftaran */
             foreach ($pendaftarans as $pendaftaran) {
-                foreach ($pendaftaran->dokumen as $dok) {
-                    Storage::disk('public')->delete($dok->file_path);
-                    $dok->delete();
-                }
                 $pendaftaran->delete();
             }
 

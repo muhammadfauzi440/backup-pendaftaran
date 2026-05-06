@@ -177,9 +177,8 @@ class PendaftaranController extends Controller
         if ($pendaftaran) {
             return response()->json([
                 'success' => true,
-                'nama' => $pendaftaran->user->name,
-                'status' => $pendaftaran->status,
-                'catatan' => $pendaftaran->catatan_admin,
+                'nama'    => $pendaftaran->user->name,
+                'status'  => $pendaftaran->status,
             ]);
         }
 
