@@ -85,8 +85,6 @@ class PendaftaranController extends Controller
             $selesai = \Carbon\Carbon::parse($request->tanggal_selesai);
             $durasi = (int) $mulai->diffInMonths($selesai);
 
-            // Security Fix: exclude status & catatan_admin agar user tidak
-            // bisa memanipulasi status pendaftarannya sendiri via form
             $data = $request->except([
                 'dokumen', 'tipe_dokumen', 'anggota',
                 'status', 'catatan_admin', 'dokumen_id',
@@ -111,20 +109,15 @@ class PendaftaranController extends Controller
                 $pendaftaran->anggota()->delete();
             }
 
-            // BUG #10 Fix: Gunakan nama field dokumen_ID spesifik per dokumen
-            // agar tidak ada ketidaksesuaian index antara tipe_dokumen[] dan dokumen[]
             if (!empty($request->dokumen_id)) {
-                // Mode edit: replace dokumen lama yang dipilih user
                 foreach ($request->dokumen_id as $idx => $dokId) {
                     $fieldName = 'dokumen_' . $dokId;
                     if ($request->hasFile($fieldName) && $request->file($fieldName)->isValid()) {
                         $oldDok = Dokumen::find($dokId);
                         if ($oldDok) {
-                            // Hapus file lama dari storage
                             if (Storage::disk('public')->exists($oldDok->file_path)) {
                                 Storage::disk('public')->delete($oldDok->file_path);
                             }
-                            // Simpan file baru
                             $path = $request->file($fieldName)->store('pendaftaran/dokumen', 'public');
                             $oldDok->update([
                                 'file_path'    => $path,
@@ -134,7 +127,6 @@ class PendaftaranController extends Controller
                     }
                 }
             } elseif ($request->hasFile('dokumen')) {
-                // Mode baru: upload semua dokumen sekaligus (pendaftaran pertama kali)
                 $tipeList = $request->tipe_dokumen ?? [];
                 foreach ($request->file('dokumen') as $key => $file) {
                     if ($file->isValid()) {

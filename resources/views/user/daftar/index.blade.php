@@ -333,7 +333,6 @@
                         @foreach ($pendaftaran->dokumen as $index => $dok)
                             <div
                                 class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-6 rounded-2xl border-2 border-gray-100 items-end relative">
-                                {{-- BUG #10 Fix: Simpan dokumen_id agar controller tahu dokumen mana yang diupdate --}}
                                 <input type="hidden" name="dokumen_id[]" value="{{ $dok->id }}">
                                 <div>
                                     <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Jenis

@@ -16,7 +16,7 @@ class Pendaftaran extends Model
         'user_id',
         'instansi_id',
         'kode_pendaftaran',
-        'tipe_pendaftaran', // BUG #12 Fix: ditambahkan agar tidak bergantung pada $guarded
+        'tipe_pendaftaran',
         'kategori',
         'nim_nisn',
         'kelas_semester',
@@ -73,8 +73,6 @@ class Pendaftaran extends Model
             }
         });
 
-        // BUG #9 Fix: Hapus file fisik dokumen saat pendaftaran dihapus via Eloquent
-        // Ini mencegah file orphan di storage ketika destroy() dipanggil
         static::deleting(function ($pendaftaran) {
             foreach ($pendaftaran->dokumen as $dok) {
                 if (\Illuminate\Support\Facades\Storage::disk('public')->exists($dok->file_path)) {
