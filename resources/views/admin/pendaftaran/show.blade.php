@@ -34,7 +34,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 text-sm">
                         <div>
                             <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Asal Instansi</p>
-                            <p class="font-black text-gray-900 text-base">{{ $pendaftaran->instansi->nama_instansi }}</p>
+                            <p class="font-black text-gray-900 text-base">{{ $pendaftaran->nama_instansi_display }}</p>
                         </div>
                         <div>
                             <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kategori</p>

@@ -37,8 +37,13 @@ class PendaftaranController extends Controller
             Gate::authorize('update', $pendaftaran);
         }
 
+        if ($request->instansi_id === 'lain') {
+            $request->merge(['instansi_id' => null]);
+        }
+
         $rules = [
-            'instansi_id' => 'required|exists:instansis,id',
+            'instansi_id'   => 'required_without:instansi_lain|nullable|exists:instansis,id',
+            'instansi_lain' => 'required_without:instansi_id|nullable|string|max:255',
             'kategori' => 'required|in:siswa,mahasiswa',
             'nim_nisn' => [
                 'required',
@@ -90,8 +95,16 @@ class PendaftaranController extends Controller
                 'status', 'catatan_admin', 'dokumen_id',
             ]);
 
-            $data['user_id'] = $user->id;
-            $data['durasi_bulan'] = $durasi ?? 0;
+            if ($request->instansi_id) {
+                $data['instansi_id']   = $request->instansi_id;
+                $data['instansi_lain'] = null;
+            } else {
+                $data['instansi_id']   = null;
+                $data['instansi_lain'] = $request->instansi_lain;
+            }
+
+            $data['user_id']       = $user->id;
+            $data['durasi_bulan']  = $durasi ?? 0;
 
             $isNewRegistration = false;
 

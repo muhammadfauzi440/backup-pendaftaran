@@ -15,6 +15,7 @@ class Pendaftaran extends Model
     protected $fillable = [
         'user_id',
         'instansi_id',
+        'instansi_lain',
         'kode_pendaftaran',
         'tipe_pendaftaran',
         'kategori',
@@ -51,6 +52,11 @@ class Pendaftaran extends Model
     public function instansi() 
     {
         return $this->belongsTo(Instansi::class);
+    }
+
+    public function getNamaInstansiDisplayAttribute(): string
+    {
+        return $this->instansi?->nama_instansi ?? $this->instansi_lain ?? 'Instansi tidak ditemukan';
     }
 
     public function dokumen()

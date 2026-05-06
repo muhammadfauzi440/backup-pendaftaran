@@ -65,20 +65,53 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="md:col-span-2">
+                    <div class="md:col-span-2"
+                        x-data="{
+                            mode: '{{ old('instansi_id', $pendaftaran?->instansi_id ? 'pilih' : ($pendaftaran?->instansi_lain ? 'lain' : 'pilih')) }}',
+                            init() {
+                                @if(old('instansi_id') === 'lain' || (!old('instansi_id') && $pendaftaran?->instansi_lain))
+                                    this.mode = 'lain';
+                                @endif
+                            }
+                        }">
                         <label class="block text-sm font-black text-gray-700 uppercase mb-2">Asal Instansi / Sekolah</label>
+
+                        {{-- Dropdown pilih dari daftar --}}
                         <select name="instansi_id"
-                            class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4 focus:border-red-500"
-                            required>
-                            <option value="" disabled selected>-- Pilih Instansi --</option>
+                            x-on:change="mode = $event.target.value === 'lain' ? 'lain' : 'pilih'"
+                            class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4 focus:border-red-500 transition-colors">
+                            <option value="" disabled {{ !old('instansi_id', $pendaftaran?->instansi_id) && !$pendaftaran?->instansi_lain ? 'selected' : '' }}>-- Pilih Instansi --</option>
                             @foreach ($instansis as $inst)
                                 <option value="{{ $inst->id }}"
-                                    {{ old('instansi_id', $pendaftaran->instansi_id ?? '') == $inst->id ? 'selected' : '' }}>
+                                    {{ old('instansi_id', $pendaftaran?->instansi_id ?? '') == $inst->id ? 'selected' : '' }}>
                                     {{ $inst->nama_instansi }} ({{ strtoupper($inst->tipe) }})
                                 </option>
                             @endforeach
+                            <option value="lain"
+                                {{ old('instansi_id') === 'lain' || $pendaftaran?->instansi_lain ? 'selected' : '' }}>
+                                Instansi lain (tidak ada dalam daftar)
+                            </option>
                         </select>
+
+                        {{-- Input teks muncul jika pilih "Instansi Lain" --}}
+                        <div x-show="mode === 'lain'"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="mt-3">
+                            <label class="block text-xs font-black text-red-600 uppercase mb-2 tracking-wider">
+                                Tulis Nama Instansi / Sekolah Anda
+                            </label>
+                            <input type="text"
+                                name="instansi_lain"
+                                value="{{ old('instansi_lain', $pendaftaran?->instansi_lain ?? '') }}"
+                                placeholder="Contoh: SMK Muhammadiyah 3 Yogyakarta"
+                                :required="mode === 'lain'"
+                                class="w-full bg-white border-2 border-red-200 rounded-xl px-5 py-4 text-sm focus:border-red-500 outline-none transition-colors placeholder-gray-400">
+                            <p class="text-xs text-gray-400 mt-1.5">Data ini akan ditinjau admin. Pastikan nama instansi sudah benar.</p>
+                        </div>
                     </div>
+
 
                     <div>
                         <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kategori Peserta</label>

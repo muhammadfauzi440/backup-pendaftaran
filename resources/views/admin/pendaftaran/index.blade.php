@@ -126,7 +126,7 @@
 
                                     <td class="px-8 py-6 align-top">
                                         <div class="text-sm font-black text-gray-700 mb-1">
-                                            {{ $p->instansi->nama_instansi ?? 'Instansi tidak ditemukan' }}
+                                            <strong>{{ $p->nama_instansi_display }}</strong><br>
                                         </div>
                                         <div class="text-[10px] text-gray-500 font-bold tracking-widest flex flex-col gap-1 mt-2">
                                             <span class="uppercase">Mulai: <span class="text-gray-900">{{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M Y') }}</span></span>
