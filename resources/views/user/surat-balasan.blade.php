@@ -29,7 +29,7 @@
         <table style="margin-left: 30px; margin-bottom: 15px;">
             <tr><td width="150">Nama Lengkap</td><td>: <strong>{{ $user->name }}</strong></td></tr>
             <tr><td>Kode Pendaftaran</td><td>: {{ $pendaftaran->kode_pendaftaran }}</td></tr>
-            <tr><td>Instansi / Kampus</td><td>: {{ $pendaftaran->instansi->nama_instansi ?? '-' }}</td></tr>
+            <tr><td>Instansi / Kampus</td><td>: {{ $pendaftaran->nama_instansi_display }}</td></tr>
             <tr><td>Program Studi</td><td>: {{ $pendaftaran->jurusan }}</td></tr>
         </table>
 

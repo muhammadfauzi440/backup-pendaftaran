@@ -118,7 +118,7 @@
                     </td>
 
                     <td>
-                        <strong>{{ $p->instansi->nama_instansi ?? 'N/A' }}</strong><br>
+                        <strong>{{ $p->nama_instansi_display }}</strong><br>
                         <span style="color: #666;">{{ ucfirst($p->kategori) }}</span>
                     </td>
 

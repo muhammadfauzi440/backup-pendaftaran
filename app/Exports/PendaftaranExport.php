@@ -80,7 +80,7 @@ class PendaftaranExport implements FromCollection, WithHeadings, WithMapping, Sh
             $p->agama,
             $p->alamat,
             ucfirst($p->kategori),
-            $p->instansi->nama_instansi ?? '-',
+            $p->nama_instansi_display,
             "'" . $p->nim_nisn,
             $p->jurusan,
             $p->kelas_semester,

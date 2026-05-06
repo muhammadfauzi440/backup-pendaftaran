@@ -60,7 +60,8 @@ class AdminController extends Controller
 
         $validatedData = $request->validate([
             'nim_nisn'        => 'required|string|max:25',
-            'instansi_id'     => 'required|exists:instansis,id',
+            'instansi_id'     => 'nullable|exists:instansis,id',
+            'instansi_lain'   => 'required_without:instansi_id|nullable|string|max:255',
             'kategori'        => 'required|in:siswa,mahasiswa',
             'jurusan'         => 'required|string|max:100',
             'kelas_semester'  => 'required|string|max:50',
@@ -97,6 +98,7 @@ class AdminController extends Controller
             $pendaftaran->update($request->only([
                 'nim_nisn',
                 'instansi_id',
+                'instansi_lain',
                 'kategori',
                 'jurusan',
                 'kelas_semester',
