@@ -29,7 +29,6 @@
     <nav class="fixed w-full z-50 top-0 border-b border-gray-100 glass-nav backdrop-blur-xl bg-white/85">
         <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
             <a href="/" class="flex items-center">
-                <!-- Pastikan path gambar logo sesuai dengan struktur folder Anda -->
                 <img src="gambar/logo_gi.png" alt="Logo GI" class="h-auto md:h-auto w-full">
             </a>
 
@@ -40,11 +39,13 @@
                 <a href="#contact" class="hover:text-red-600 transition">Kontak</a>
             </div>
 
-            <div class="flex items-center gap-4">
-                <!-- Rute Baru ke Halaman Cek Status -->
-                <a href="{{ route('cek-status.index') }}" class="hidden md:block text-sm font-bold text-gray-500 hover:text-red-600 transition">Cek Status</a>
-                <a href="{{ route('register') }}" class="text-sm font-bold text-gray-700 hover:text-red-600 transition">Daftar</a>
-                <a href="{{ route('login') }}" class="px-6 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition">Login</a>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('cek-status.index') }}" class="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-red-600/20 transform hover:-translate-y-0.5 group">
+                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Cek Status
+                </a>
+                <a href="{{ route('register') }}" class="px-5 py-2.5 text-sm font-bold text-gray-700 bg-transparent border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 transition-colors">Daftar</a>
+                <a href="{{ route('login') }}" class="px-6 py-2.5 bg-red-600 text-white text-sm font-bold border border-transparent rounded-lg hover:bg-red-700 shadow-sm hover:shadow-md transition-all">Login</a>
             </div>
         </div>
     </nav>
@@ -67,9 +68,6 @@
                 <div class="flex flex-wrap items-center gap-4">
                     <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-4 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 text-center">
                         Ajukan Pendaftaran
-                    </a>
-                    <a href="{{ route('cek-status.index') }}" class="w-full sm:w-auto px-8 py-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all border border-gray-200 text-center">
-                        Cek Status Saya
                     </a>
                 </div>
             </div>
@@ -162,12 +160,14 @@
                     </p>
                 </div>
 
-                <div class="z-10 w-full lg:w-auto shrink-0 flex flex-col gap-4">
-                    <a href="{{ route('register') }}" class="w-full lg:w-64 px-8 py-5 bg-red-600 text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-red-500 transition-all shadow-xl shadow-red-600/30 text-center transform hover:-translate-y-1">
-                        Daftar Sekarang
+                <div class="z-10 w-full sm:w-auto shrink-0 flex flex-col sm:flex-row lg:flex-col gap-4 mt-8 lg:mt-0">
+                    <a href="{{ route('register') }}" class="group flex items-center justify-center gap-3 w-full sm:w-auto lg:w-64 px-8 py-4 bg-red-600 text-white font-bold text-sm uppercase tracking-wider rounded-xl hover:bg-red-500 transition-all shadow-lg hover:shadow-red-600/40 transform hover:-translate-y-0.5">
+                        <span>Daftar Sekarang</span>
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
-                    <a href="{{ route('login') }}" class="w-full lg:w-64 px-8 py-5 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all text-center">
-                        Login Akun
+                    <a href="{{ route('cek-status.index') }}" class="flex items-center justify-center gap-3 w-full sm:w-auto lg:w-64 px-8 py-4 bg-white/10 backdrop-blur-md border border-white/10 text-white font-bold text-sm uppercase tracking-wider rounded-xl hover:bg-white/20 hover:border-white/30 transition-all transform hover:-translate-y-0.5">
+                        <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        <span>Cek Status</span>
                     </a>
                 </div>
 
@@ -217,12 +217,6 @@
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center sm:text-left">
                     © {{ date('Y') }} PT Global Intermedia Nusantara. All Rights Reserved.
                 </p>
-                <div class="flex gap-4">
-                    <!-- Tautan Sosmed Opsional -->
-                    <a href="#" class="text-gray-400 hover:text-gray-900 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
-                    <a href="#" class="text-gray-400 hover:text-gray-900 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-                    <a href="#" class="text-gray-400 hover:text-gray-900 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-                </div>
             </div>
         </div>
     </footer>
