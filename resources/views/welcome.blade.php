@@ -145,7 +145,6 @@
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="bg-gray-900 rounded-[2.5rem] lg:rounded-[3rem] p-8 sm:p-12 lg:p-20 text-white shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12">
                 
-                <!-- Lingkaran Dekorasi -->
                 <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-red-600 rounded-full filter blur-[100px] opacity-30"></div>
                 
                 <div class="max-w-2xl text-center lg:text-left z-10">

@@ -60,7 +60,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/audit-logs', [AdminController::class, 'auditLogs'])->name('admin.audit-logs.index');
 });
 
-//Route ke Pengguna
+//Route ke User
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index_user'])->name('user.dashboard');
     Route::get('/user/daftar', [PendaftaranController::class, 'index'])->name('user.daftar');

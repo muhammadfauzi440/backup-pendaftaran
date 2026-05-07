@@ -119,25 +119,21 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
                     <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-50 rounded-full opacity-50"></div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest relative z-10">Total Pendaftar</p>
                         <h2 class="text-4xl font-black text-gray-900 mt-2 relative z-10">{{ $stats['total'] ?? 0 }}</h2>
                     </div>
 
                     <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 rounded-full opacity-50"></div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest relative z-10">Status Pending</p>
                         <h2 class="text-4xl font-black text-amber-500 mt-2 relative z-10">{{ $stats['pending'] ?? 0 }}</h2>
                     </div>
 
                     <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50"></div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest relative z-10">Lolos Diterima</p>
                         <h2 class="text-4xl font-black text-emerald-600 mt-2 relative z-10">{{ $stats['diterima'] ?? 0 }}</h2>
                     </div>
 
                     <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full opacity-50"></div>
                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest relative z-10">Ditolak</p>
                         <h2 class="text-4xl font-black text-red-600 mt-2 relative z-10">{{ $stats['ditolak'] ?? 0 }}</h2>
                     </div>
