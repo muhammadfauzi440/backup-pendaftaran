@@ -20,12 +20,12 @@
     </div>
 
     <aside :class="sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0 md:w-20'"
-        class="fixed inset-y-0 left-0 z-60 bg-gray-900 text-white transition-all duration-300 ease-in-out flex flex-col shadow-2xl md:shadow-none overflow-hidden">
+        class="fixed inset-y-0 left-0 z-50 bg-gray-900 text-white transition-all duration-300 ease-in-out flex flex-col shadow-2xl md:shadow-none overflow-hidden">
         
         <div class="p-6 flex items-center justify-between border-b border-gray-800 h-20">
             <span x-show="sidebarOpen" class="font-bold text-lg whitespace-nowrap">Admin <span class="text-red-600">Dashboard</span></span>
             <span x-show="!sidebarOpen" class="font-bold text-lg text-center w-full hidden md:block text-red-600">GI</span>
-            
+
             <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-white p-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>

@@ -49,6 +49,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/kelola-pendaftaran/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.pendaftaran.updateStatus');
 
     Route::get('/admin/users', [ProfileController::class, 'index_admin'])->name('admin.users.index');
+    Route::get('/admin/users/create', [ProfileController::class, 'create'])->name('admin.users.create');
     Route::get('/admin/users/{id}/edit', [ProfileController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [ProfileController::class, 'updateUser'])->name('admin.users.update');
     Route::post('/admin/users', [ProfileController::class, 'store'])->name('admin.users.store');

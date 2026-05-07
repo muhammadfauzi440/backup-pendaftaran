@@ -16,6 +16,11 @@ class ProfileController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
     public function index_user()
     {   
         $user = Auth::user();
@@ -54,13 +59,13 @@ class ProfileController extends Controller
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role'     => $request->role,
         ]);
 
-        return back()->with('success', 'Pengguna baru berhasil ditambahkan');
+        return redirect()->route('admin.users.index')->with('success', 'Pengguna baru berhasil ditambahkan');
     }
 
     public function destroy($id)
