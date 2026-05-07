@@ -58,6 +58,10 @@ class AdminController extends Controller
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
 
+        if ($request->instansi_id === 'lain') {
+            $request->merge(['instansi_id' => null]);
+        }
+
         $validatedData = $request->validate([
             'nim_nisn'        => 'required|string|max:25',
             'instansi_id'     => 'nullable|exists:instansis,id',
@@ -95,10 +99,12 @@ class AdminController extends Controller
         try {
             DB::beginTransaction();
 
-            $pendaftaran->update($request->only([
+            $instansiData = $request->instansi_id
+                ? ['instansi_id' => $request->instansi_id, 'instansi_lain' => null]
+                : ['instansi_id' => null, 'instansi_lain' => $request->instansi_lain];
+
+            $pendaftaran->update(array_merge($request->only([
                 'nim_nisn',
-                'instansi_id',
-                'instansi_lain',
                 'kategori',
                 'jurusan',
                 'kelas_semester',
@@ -111,7 +117,7 @@ class AdminController extends Controller
                 'tanggal_mulai',
                 'tanggal_selesai',
                 'durasi_bulan'
-            ]));
+            ]), $instansiData));
 
             if ($request->has('anggota')) {
                 foreach ($request->anggota as $anggota_id => $data_anggota) {
