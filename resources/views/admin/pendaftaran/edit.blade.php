@@ -375,7 +375,7 @@
                                         <span
                                             class="text-[9px] font-black text-gray-400 uppercase tracking-tighter">{{ $dok->tipe_dokumen }}</span>
                                         <span :class="isSelected ? 'line-through text-red-900' : 'text-gray-900'"
-                                            class="text-xs font-bold truncate max-w-[150px] transition-all">
+                                            class="text-xs font-bold truncate max-w-37.5 transition-all">
                                             {{ $dok->nama_dokumen }}
                                         </span>
                                     </div>
