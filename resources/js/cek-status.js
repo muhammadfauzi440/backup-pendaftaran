@@ -20,7 +20,7 @@ window.cekStatus = function () {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    fetch(`/cek-status/${kode}`, {
+    fetch(`/cek-status`, {
         method: "POST",
         headers: {
             "X-Requested-With": "XMLHttpRequest",
