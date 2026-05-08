@@ -21,7 +21,7 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pendaftaran::with(['user', 'instansi', 'dokumen'])->latest();
+        $query = Pendaftaran::with(['user', 'instansi', 'dokumen', 'anggota'])->latest();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -36,8 +36,11 @@ class AdminController extends Controller
             $query->where('status', $request->status);
         }
 
-        $pendaftarans = $query->paginate(10)->withQueryString();
-        return view('admin.pendaftaran.index', compact('pendaftarans'));
+        $allowed  = [5, 10, 25, 50];
+        $perPage  = in_array((int) $request->per_page, $allowed) ? (int) $request->per_page : 10;
+
+        $pendaftarans = $query->paginate($perPage)->withQueryString();
+        return view('admin.pendaftaran.index', compact('pendaftarans', 'perPage'));
     }
 
     public function show($id)

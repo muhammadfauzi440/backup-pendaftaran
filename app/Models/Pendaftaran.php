@@ -9,8 +9,12 @@ use App\Models\Dokumen;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Pendaftaran extends Model
 {
+    use HasFactory;
+
     protected $table = 'pendaftarans';
     protected $fillable = [
         'user_id',
@@ -49,7 +53,7 @@ class Pendaftaran extends Model
         ]);
     }
 
-    public function instansi() 
+    public function instansi()
     {
         return $this->belongsTo(Instansi::class);
     }

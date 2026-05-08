@@ -8,6 +8,9 @@
                 &larr; Kembali ke Daftar
             </a>
             <div class="flex flex-wrap gap-4">
+                <span class="text-[10px] font-black uppercase px-4 py-2 bg-blue-100 text-blue-900 rounded-full tracking-widest shadow-sm border border-blue-200">
+                    Kode: <span class="text-blue-900">{{ $pendaftaran->kode_pendaftaran }}</span>
+                </span>
                 <span class="text-[10px] font-black uppercase px-4 py-2 bg-gray-100 text-gray-600 rounded-full tracking-widest shadow-sm">
                     Tipe: <span class="text-gray-900">{{ $pendaftaran->tipe_pendaftaran }}</span>
                 </span>

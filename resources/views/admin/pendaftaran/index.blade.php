@@ -29,21 +29,32 @@
 
         <div class="bg-white p-4 rounded-3xl border-2 border-gray-50 mb-6 shadow-sm flex flex-col md:flex-row gap-4">
             <form action="{{ route('admin.pendaftaran.index') }}" method="GET" class="flex-1 flex flex-col md:flex-row gap-4 w-full">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama Pendaftar atau NIM/NISN..." 
-                    class="w-full md:w-2/3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl focus:ring-gray-900 focus:border-gray-900 block p-3.5 font-medium">
-                
-                <select name="status" class="w-full md:w-1/3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl focus:ring-gray-900 focus:border-gray-900 block p-3.5 font-bold uppercase tracking-widest text-[10px]">
+                <input type="hidden" name="per_page" value="{{ $perPage }}">
+
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama Pendaftar atau NIM/NISN..."
+                    class="w-full md:flex-1 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl focus:ring-gray-900 focus:border-gray-900 block p-3.5 font-medium">
+
+                <select name="status" class="w-full md:w-48 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl focus:ring-gray-900 focus:border-gray-900 block p-3.5 font-bold uppercase tracking-widest text-[10px]">
                     <option value="">-- SEMUA STATUS --</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>PENDING</option>
                     <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>DITERIMA</option>
                     <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>DITOLAK</option>
                 </select>
 
+                <select name="per_page" onchange="this.form.submit()"
+                    class="w-full md:w-36 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl focus:ring-gray-900 focus:border-gray-900 block p-3.5 font-bold text-[10px] uppercase">
+                    @foreach ([5, 10, 25, 50] as $opt)
+                        <option value="{{ $opt }}" {{ $perPage == $opt ? 'selected' : '' }}>
+                            {{ $opt }} / Halaman
+                        </option>
+                    @endforeach
+                </select>
+
                 <button type="submit" class="bg-gray-900 text-white px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition">
                     Cari
                 </button>
                 @if(request('search') || request('status'))
-                    <a href="{{ route('admin.pendaftaran.index') }}" class="bg-gray-100 text-gray-600 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition text-center border border-gray-200">
+                    <a href="{{ route('admin.pendaftaran.index', ['per_page' => $perPage]) }}" class="bg-gray-100 text-gray-600 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition text-center border border-gray-200">
                         Reset
                     </a>
                 @endif
@@ -175,9 +186,66 @@
                 </div>
             </div>
 
-            <div class="mt-8">
-                {{ $pendaftarans->links() }}
-            </div>
+            {{-- Pagination info + kontrol --}}
+            @if ($pendaftarans->hasPages() || $pendaftarans->total() > 0)
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+                    {{-- Info teks --}}
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        Menampilkan
+                        <span class="text-gray-900">{{ $pendaftarans->firstItem() }}–{{ $pendaftarans->lastItem() }}</span>
+                        dari
+                        <span class="text-gray-900">{{ $pendaftarans->total() }}</span> data
+                        &bull; Halaman <span class="text-gray-900">{{ $pendaftarans->currentPage() }}</span>
+                        dari <span class="text-gray-900">{{ $pendaftarans->lastPage() }}</span>
+                    </p>
+
+                    {{-- Tombol navigasi halaman --}}
+                    @if ($pendaftarans->hasPages())
+                        <div class="flex items-center gap-1.5">
+                            {{-- Prev --}}
+                            @if ($pendaftarans->onFirstPage())
+                                <span class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-300 cursor-not-allowed select-none">
+                                    &laquo; Prev
+                                </span>
+                            @else
+                                <a href="{{ $pendaftarans->previousPageUrl() }}"
+                                    class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-600 hover:bg-gray-900 hover:text-white transition-all">
+                                    &laquo; Prev
+                                </a>
+                            @endif
+
+                            {{-- Nomor halaman --}}
+                            @foreach ($pendaftarans->getUrlRange(1, $pendaftarans->lastPage()) as $page => $url)
+                                @if ($page == $pendaftarans->currentPage())
+                                    <span class="w-10 h-10 flex items-center justify-center rounded-xl text-[10px] font-black bg-gray-900 text-white">
+                                        {{ $page }}
+                                    </span>
+                                @elseif (abs($page - $pendaftarans->currentPage()) <= 2 || $page == 1 || $page == $pendaftarans->lastPage())
+                                    <a href="{{ $url }}"
+                                        class="w-10 h-10 flex items-center justify-center rounded-xl text-[10px] font-black bg-gray-100 text-gray-600 hover:bg-gray-900 hover:text-white transition-all">
+                                        {{ $page }}
+                                    </a>
+                                @elseif (abs($page - $pendaftarans->currentPage()) == 3)
+                                    <span class="w-10 h-10 flex items-center justify-center text-gray-400 text-xs font-bold">…</span>
+                                @endif
+                            @endforeach
+
+                            {{-- Next --}}
+                            @if ($pendaftarans->hasMorePages())
+                                <a href="{{ $pendaftarans->nextPageUrl() }}"
+                                    class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-600 hover:bg-gray-900 hover:text-white transition-all">
+                                    Next &raquo;
+                                </a>
+                            @else
+                                <span class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-300 cursor-not-allowed select-none">
+                                    Next &raquo;
+                                </span>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            @endif
         </form>
 
         <form id="singleDeleteForm" method="POST" class="hidden">

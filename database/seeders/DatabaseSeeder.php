@@ -25,21 +25,19 @@ class DatabaseSeeder extends Seeder
         }
 
         $daftarStatus = ['pending', 'diterima', 'ditolak'];
-
         foreach ($daftarStatus as $status) {
-            $userData = [
+            $user = User::create([
                 'name' => 'Pendaftar ' . ucfirst($status),
                 'email' => "user_$status@gmail.com",
                 'password' => Hash::make('user123'),
                 'role' => 'user',
-            ];
-
-            $user = User::create($userData);
+            ]);
 
             Pendaftaran::create([
                 'user_id'         => $user->id,
                 'instansi_id'     => $instansis->random()->id,
-                'kategori'        => $kategori = rand(0, 1) ? 'siswa' : 'mahasiswa',
+                'kode_pendaftaran'=> 'GIN-DEMO-' . strtoupper($status),
+                'kategori'        => rand(0, 1) ? 'siswa' : 'mahasiswa',
                 'kelas_semester'  => 'Semester 5',
                 'nim_nisn'        => rand(10000000, 99999999),
                 'jurusan'         => 'Teknik Informatika',
@@ -49,12 +47,16 @@ class DatabaseSeeder extends Seeder
                 'tempat_lahir'    => 'Yogyakarta',
                 'tanggal_lahir'   => '2004-01-01',
                 'alamat'          => 'Jl Pegangsaan Timur',
-                'jenis_kelamin'   => 'Laki-laki',
+                'jenis_kelamin'   => 'laki-laki',
                 'agama'           => 'Islam',
                 'kontak'          => '081234567' . rand(100, 999),
                 'status'          => $status,
                 'catatan_admin'   => $status === 'pending' ? null : 'Catatan demo ' . $status,
             ]);
         }
+
+        Pendaftaran::factory()->count(100)->create();
+        
+        $this->command->info("Berhasil membuat 100 data dummy Pendaftaran!");
     }
 }
