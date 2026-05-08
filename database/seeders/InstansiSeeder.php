@@ -46,6 +46,6 @@ class InstansiSeeder extends Seeder
 
 
         Instansi::factory()->count(21)->create();
-        $this->command->info('Berhasil membuat 25 data dummy Instansi!');
+        $this->command->info('Berhasil membuat 21 data dummy Instansi!');
     }
 }
