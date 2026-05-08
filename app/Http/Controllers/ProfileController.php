@@ -10,10 +10,27 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Gate;
 class ProfileController extends Controller
 {
-    public function index_admin()
-    {   
-        $users = User::latest()->get();
-        return view('admin.users.index', compact('users'));
+    public function index_admin(Request $request)
+    {
+        $query = User::latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $allowed = [5, 10, 25, 50];
+        $perPage = in_array((int) $request->per_page, $allowed) ? (int) $request->per_page : 10;
+
+        $users = $query->paginate($perPage)->withQueryString();
+        return view('admin.users.index', compact('users', 'perPage'));
     }
 
     public function create()
