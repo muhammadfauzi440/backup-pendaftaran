@@ -55,8 +55,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        Pendaftaran::factory()->count(100)->create();
+        Pendaftaran::factory()->count(50)->create();
         
-        $this->command->info("Berhasil membuat 100 data dummy Pendaftaran!");
+        $this->command->info("Berhasil membuat 50 data dummy Pendaftaran!");
     }
 }

@@ -12,24 +12,24 @@ class InstansiController extends Controller
     {
         $search = $request->input('search');
 
-        $instansis = Instansi::when($search, function ($query, $search) {
+        $query = Instansi::when($search, function ($query, $search) {
             $keywords = explode(' ', $search);
-
             foreach ($keywords as $word) {
-                if (strlen($word) <= 1) {
-                    continue;
-                }
-
+                if (strlen($word) <= 1) continue;
                 $query->where(function ($q) use ($word) {
                     $q->where('nama_instansi', 'like', "%{$word}%")
-                        ->orWhere('alamat_instansi', 'like', "%{$word}%");
+                      ->orWhere('alamat_instansi', 'like', "%{$word}%");
                 });
             }
-        })
-            ->latest()
-            ->get();
+        })->when($request->filled('tipe'), fn($q) => $q->where('tipe', $request->tipe))
+          ->latest();
 
-        return view('admin.instansi.index', compact('instansis'));
+        $allowed  = [5, 10, 25, 50];
+        $perPage  = in_array((int) $request->per_page, $allowed) ? (int) $request->per_page : 10;
+
+        $instansis = $query->paginate($perPage)->withQueryString();
+
+        return view('admin.instansi.index', compact('instansis', 'perPage'));
     }
 
     public function edit($id)
