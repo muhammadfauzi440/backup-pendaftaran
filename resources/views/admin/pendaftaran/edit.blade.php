@@ -162,12 +162,7 @@
                                         type="text" name="jurusan" value="{{ old('jurusan', $pendaftaran->jurusan) }}"
                                         class="w-full bg-white border-2 border-red-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
                                 </div>
-                                <div class="space-y-2"><label
-                                        class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Kelas /
-                                        Semester</label><input type="text" name="kelas_semester"
-                                        value="{{ old('kelas_semester', $pendaftaran->kelas_semester) }}"
-                                        class="w-full bg-white border-2 border-red-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
-                                </div>
+
                                 <div class="space-y-2"><label
                                         class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Jenis
                                         Kelamin</label><select name="jenis_kelamin"
@@ -191,11 +186,7 @@
                                         value="{{ old('tanggal_lahir', $pendaftaran->tanggal_lahir ? $pendaftaran->tanggal_lahir->format('Y-m-d') : '') }}"
                                         class="w-full bg-white border-2 border-red-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
                                 </div>
-                                <div class="space-y-2"><label
-                                        class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Agama</label><input
-                                        type="text" name="agama" value="{{ old('agama', $pendaftaran->agama) }}"
-                                        class="w-full bg-white border-2 border-red-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
-                                </div>
+
                                 <div class="space-y-2"><label
                                         class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Kontak/WA</label><input
                                         type="text" name="kontak" value="{{ old('kontak', $pendaftaran->kontak) }}"
@@ -236,13 +227,7 @@
                                             value="{{ old('anggota.' . $anggota->id . '.jurusan', $anggota->jurusan) }}"
                                             class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
                                     </div>
-                                    <div class="space-y-2"><label
-                                            class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Kelas
-                                            / Semester</label><input type="text"
-                                            name="anggota[{{ $anggota->id }}][kelas_semester]"
-                                            value="{{ old('anggota.' . $anggota->id . '.kelas_semester', $anggota->kelas_semester) }}"
-                                            class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
-                                    </div>
+
                                     <div class="space-y-2"><label
                                             class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Jenis
                                             Kelamin</label><select name="anggota[{{ $anggota->id }}][jenis_kelamin]"
@@ -268,12 +253,7 @@
                                             value="{{ old('anggota.' . $anggota->id . '.tanggal_lahir', $anggota->tanggal_lahir ? \Carbon\Carbon::parse($anggota->tanggal_lahir)->format('Y-m-d') : '') }}"
                                             class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
                                     </div>
-                                    <div class="space-y-2"><label
-                                            class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Agama</label><input
-                                            type="text" name="anggota[{{ $anggota->id }}][agama]"
-                                            value="{{ old('anggota.' . $anggota->id . '.agama', $anggota->agama) }}"
-                                            class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
-                                    </div>
+
                                     <div class="space-y-2"><label
                                             class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Kontak/WA</label><input
                                             type="text" name="anggota[{{ $anggota->id }}][kontak]"
@@ -301,12 +281,7 @@
                                     type="text" name="jurusan" value="{{ old('jurusan', $pendaftaran->jurusan) }}"
                                     class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
                             </div>
-                            <div class="space-y-2"><label
-                                    class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Kelas /
-                                    Semester</label><input type="text" name="kelas_semester"
-                                    value="{{ old('kelas_semester', $pendaftaran->kelas_semester) }}"
-                                    class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
-                            </div>
+
                             <div class="space-y-2"><label
                                     class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Jenis
                                     Kelamin</label><select name="jenis_kelamin"
@@ -330,11 +305,7 @@
                                     value="{{ old('tanggal_lahir', $pendaftaran->tanggal_lahir ? $pendaftaran->tanggal_lahir->format('Y-m-d') : '') }}"
                                     class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
                             </div>
-                            <div class="space-y-2"><label
-                                    class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Agama</label><input
-                                    type="text" name="agama" value="{{ old('agama', $pendaftaran->agama) }}"
-                                    class="w-full bg-white border-2 border-gray-100 rounded-xl px-5 py-3.5 text-sm font-bold text-gray-700 focus:border-red-600 outline-none">
-                            </div>
+
                             <div class="space-y-2"><label
                                     class="text-xs font-black uppercase tracking-widest text-gray-900 ml-1 mb-2 inline-block">Kontak/WA</label><input
                                     type="text" name="kontak" value="{{ old('kontak', $pendaftaran->kontak) }}"

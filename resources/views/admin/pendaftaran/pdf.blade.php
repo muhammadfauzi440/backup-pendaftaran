@@ -84,9 +84,9 @@
                 <th width="8%">Kode & Tipe</th>
                 <th width="12%">Nama Lengkap</th>
                 <th width="10%">Kontak & L/P</th>
-                <th width="12%">TTL & Agama</th>
+                <th width="12%">TTL</th>
                 <th width="15%">Instansi & Kategori</th>
-                <th width="10%">NIM/NISN & Kelas</th>
+                <th width="10%">NIM/NISN</th>
                 <th width="10%">Jurusan</th>
                 <th width="12%">Periode Magang</th>
                 <th width="8%">Status</th>
@@ -113,8 +113,7 @@
                     </td>
 
                     <td>
-                        {{ $p->tempat_lahir }}, {{ \Carbon\Carbon::parse($p->tanggal_lahir)->format('d/m/Y') }}<br>
-                        <span style="color: #666;">{{ $p->agama }}</span>
+                        {{ $p->tempat_lahir }}, {{ \Carbon\Carbon::parse($p->tanggal_lahir)->format('d/m/Y') }}
                     </td>
 
                     <td>
@@ -123,8 +122,7 @@
                     </td>
 
                     <td>
-                        <strong>{{ $p->nim_nisn }}</strong><br>
-                        <span style="color: #666;">{{ $p->kelas_semester }}</span>
+                        <strong>{{ $p->nim_nisn }}</strong>
                     </td>
 
                     <td>{{ $p->jurusan }}</td>

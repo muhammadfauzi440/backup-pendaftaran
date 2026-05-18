@@ -17,13 +17,12 @@ return new class extends Migration
 
             $table->string('nim_nisn', 30);
             $table->string('jurusan');
-            $table->string('kelas_semester');
-            
+
             $table->string('nama');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');  
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
-            $table->string('agama');
+
             $table->string('kontak');
             $table->text('alamat');
 

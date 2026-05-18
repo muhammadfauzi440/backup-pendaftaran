@@ -71,11 +71,11 @@ class AdminController extends Controller
             'instansi_lain'   => 'required_without:instansi_id|nullable|string|max:255',
             'kategori'        => 'required|in:siswa,mahasiswa',
             'jurusan'         => 'required|string|max:100',
-            'kelas_semester'  => 'required|string|max:50',
+
             'tempat_lahir'    => 'required|string|max:100',
             'tanggal_lahir'   => 'required|date',
             'jenis_kelamin'   => 'required|in:laki-laki,perempuan',
-            'agama'           => 'required|string|max:50',
+
             'kontak'          => 'required|string|max:20',
             'alamat'          => 'required|string|max:500',
             'tanggal_mulai'   => 'required|date',
@@ -86,11 +86,11 @@ class AdminController extends Controller
             'anggota.*.nama'          => 'required_with:anggota|string|max:255',
             'anggota.*.nim_nisn'      => 'required_with:anggota|string|max:30',
             'anggota.*.jurusan'       => 'required_with:anggota|string|max:100',
-            'anggota.*.kelas_semester' => 'required_with:anggota|string|max:100',
+
             'anggota.*.tempat_lahir'  => 'required_with:anggota|string|max:100',
             'anggota.*.tanggal_lahir' => 'required_with:anggota|date',
             'anggota.*.jenis_kelamin' => 'required_with:anggota|in:laki-laki,perempuan',
-            'anggota.*.agama'         => 'required_with:anggota|string|max:50',
+
             'anggota.*.kontak'        => 'required_with:anggota|string|max:20',
             'anggota.*.alamat'        => 'required_with:anggota|string',
 
@@ -110,11 +110,11 @@ class AdminController extends Controller
                 'nim_nisn',
                 'kategori',
                 'jurusan',
-                'kelas_semester',
+
                 'tempat_lahir',
                 'tanggal_lahir',
                 'jenis_kelamin',
-                'agama',
+
                 'kontak',
                 'alamat',
                 'tanggal_mulai',

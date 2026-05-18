@@ -8,12 +8,12 @@ window.tambahAnggotaKel = function(data = null) {
     const v_nama = data && data.nama ? data.nama : '';
     const v_nim = data && data.nim_nisn ? data.nim_nisn : '';
     const v_jurusan = data && data.jurusan ? data.jurusan : '';
-    const v_kelas = data && data.kelas_semester ? data.kelas_semester : '';
+
     const v_tempat = data && data.tempat_lahir ? data.tempat_lahir : '';
     const v_tanggal = data && data.tanggal_lahir ? data.tanggal_lahir : '';
     const c_laki = data && data.jenis_kelamin === 'laki-laki' ? 'checked' : '';
     const c_perem = data && data.jenis_kelamin === 'perempuan' ? 'checked' : '';
-    const v_agama = data && data.agama ? data.agama : '';
+
     const v_kontak = data && data.kontak ? data.kontak : '';
     const v_alamat = data && data.alamat ? data.alamat : '';
 
@@ -44,10 +44,7 @@ window.tambahAnggotaKel = function(data = null) {
                     <input type="text" name="anggota[${currentIndex}][jurusan]" value="${v_jurusan}" placeholder="Jurusan" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kelas / Semester</label>
-                    <input type="text" name="anggota[${currentIndex}][kelas_semester]" value="${v_kelas}" placeholder="Kelas / Semester" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
-                </div>
+
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Tempat Lahir</label>
@@ -71,10 +68,7 @@ window.tambahAnggotaKel = function(data = null) {
                     </div>
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-black text-gray-700 uppercase mb-2">Agama</label>
-                    <input type="text" name="anggota[${currentIndex}][agama]" value="${v_agama}" placeholder="Agama" class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500" required>
-                </div>
+
                 
                 <div>
                     <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kontak / WA</label>

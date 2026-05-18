@@ -84,7 +84,7 @@
                                 </div>
                                 <div><p class="text-red-400 font-bold uppercase text-[10px] tracking-widest mb-1">NIM / NISN</p><p class="font-bold text-red-900">{{ $pendaftaran->nim_nisn }}</p></div>
                                 <div><p class="text-red-400 font-bold uppercase text-[10px] tracking-widest mb-1">Jurusan</p><p class="font-bold text-red-900">{{ $pendaftaran->jurusan }}</p></div>
-                                <div><p class="text-red-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kelas/Semester</p><p class="font-bold text-red-900">{{ $pendaftaran->kelas_semester }}</p></div>
+
                                 <div><p class="text-red-400 font-bold uppercase text-[10px] tracking-widest mb-1">Jenis Kelamin</p><p class="font-bold text-red-900 uppercase">{{ $pendaftaran->jenis_kelamin }}</p></div>
                                 <div><p class="text-red-400 font-bold uppercase text-[10px] tracking-widest mb-1">Tempat, Tgl Lahir</p><p class="font-bold text-red-900">{{ $pendaftaran->tempat_lahir }}, {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->format('d M Y') }}</p></div>
                                 <div><p class="text-red-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kontak/WA</p><p class="font-bold text-red-900">{{ $pendaftaran->kontak }}</p></div>
@@ -104,7 +104,7 @@
                                     </div>
                                     <div><p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">NIM / NISN</p><p class="font-bold text-gray-900">{{ $anggota->nim_nisn }}</p></div>
                                     <div><p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Jurusan</p><p class="font-bold text-gray-900">{{ $anggota->jurusan }}</p></div>
-                                    <div><p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kelas/Semester</p><p class="font-bold text-gray-900">{{ $anggota->kelas_semester }}</p></div>
+
                                     <div><p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Jenis Kelamin</p><p class="font-bold text-gray-900 uppercase">{{ $anggota->jenis_kelamin }}</p></div>
                                     <div><p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Tempat, Tgl Lahir</p><p class="font-bold text-gray-900">{{ $anggota->tempat_lahir }}, {{ \Carbon\Carbon::parse($anggota->tanggal_lahir)->format('d M Y') }}</p></div>
                                     <div><p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kontak/WA</p><p class="font-bold text-gray-900">{{ $anggota->kontak }}</p></div>
@@ -127,10 +127,7 @@
                                 <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Jurusan</p>
                                 <p class="font-black text-gray-900">{{ $pendaftaran->jurusan }}</p>
                             </div>
-                            <div>
-                                <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kelas / Semester</p>
-                                <p class="font-black text-gray-900">{{ $pendaftaran->kelas_semester }}</p>
-                            </div>
+
                             <div>
                                 <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Jenis Kelamin</p>
                                 <p class="font-black text-gray-900 uppercase">{{ $pendaftaran->jenis_kelamin }}</p>
@@ -139,10 +136,7 @@
                                 <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Tempat, Tanggal Lahir</p>
                                 <p class="font-black text-gray-900">{{ $pendaftaran->tempat_lahir }}, {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->format('d F Y') }}</p>
                             </div>
-                            <div>
-                                <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Agama</p>
-                                <p class="font-black text-gray-900">{{ $pendaftaran->agama }}</p>
-                            </div>
+
                             <div>
                                 <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-1">Kontak/WA</p>
                                 <p class="font-black text-gray-900">{{ $pendaftaran->kontak }}</p>

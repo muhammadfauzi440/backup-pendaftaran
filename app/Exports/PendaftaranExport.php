@@ -50,13 +50,13 @@ class PendaftaranExport implements FromCollection, WithHeadings, WithMapping, Sh
             'No. HP / WA',
             'Jenis Kelamin',
             'Tempat, Tanggal Lahir',
-            'Agama',
+
             'Alamat Lengkap',
             'Kategori',
             'Instansi / Kampus / Sekolah',
             'NIM / NISN',
             'Jurusan / Program Studi',
-            'Kelas / Semester',
+
             'Mulai Magang',
             'Selesai Magang',
             'Durasi (Bulan)',
@@ -77,13 +77,13 @@ class PendaftaranExport implements FromCollection, WithHeadings, WithMapping, Sh
             "'" . $p->kontak,
             $p->jenis_kelamin == 'laki-laki' ? 'Laki-Laki' : 'Perempuan',
             $p->tempat_lahir . ', ' . Carbon::parse($p->tanggal_lahir)->format('d F Y'),
-            $p->agama,
+
             $p->alamat,
             ucfirst($p->kategori),
             $p->nama_instansi_display,
             "'" . $p->nim_nisn,
             $p->jurusan,
-            $p->kelas_semester,
+
             Carbon::parse($p->tanggal_mulai)->format('d-m-Y'),
             Carbon::parse($p->tanggal_selesai)->format('d-m-Y'),
             $p->durasi_bulan,

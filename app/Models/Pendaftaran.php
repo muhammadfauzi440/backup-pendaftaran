@@ -24,7 +24,7 @@ class Pendaftaran extends Model
         'tipe_pendaftaran',
         'kategori',
         'nim_nisn',
-        'kelas_semester',
+
         'jurusan',
         'tanggal_mulai',
         'tanggal_selesai',
@@ -33,7 +33,7 @@ class Pendaftaran extends Model
         'tanggal_lahir',
         'alamat',
         'jenis_kelamin',
-        'agama',
+
         'kontak',
         'status',
         'catatan_admin'

@@ -15,8 +15,8 @@ class AnggotaPendaftaran extends Model
         'kontak',
         'tempat_lahir',
         'tanggal_lahir',
-        'agama',
-        'kelas_semester',
+
+
         'alamat',
     ];
 

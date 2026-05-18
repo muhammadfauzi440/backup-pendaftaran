@@ -173,13 +173,7 @@
                                 placeholder="Contoh: Teknik Informatika" required>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kelas / Semester</label>
-                            <input type="text" name="kelas_semester"
-                                value="{{ old('kelas_semester', $pendaftaran->kelas_semester ?? '') }}"
-                                class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4 focus:border-red-500"
-                                placeholder="Contoh: XII / Semester 5" required>
-                        </div>
+
 
                         <div>
                             <label class="block text-sm font-black text-gray-700 uppercase mb-2">Tempat Lahir</label>
@@ -197,12 +191,7 @@
                                 required>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-black text-gray-700 uppercase mb-2">Agama</label>
-                            <input type="text" name="agama" value="{{ old('agama', $pendaftaran->agama ?? '') }}"
-                                class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4 focus:border-red-500"
-                                placeholder="Contoh: Islam" required>
-                        </div>
+
 
                         <div>
                             <label class="block text-sm font-black text-gray-700 uppercase mb-2">Jenis Kelamin</label>
@@ -275,14 +264,7 @@
                                     placeholder="Jurusan Anda" required>
                             </div>
 
-                            <div>
-                                <label class="block text-sm font-black text-gray-700 uppercase mb-2">Kelas /
-                                    Semester</label>
-                                <input type="text" name="kelas_semester"
-                                    value="{{ old('kelas_semester', $pendaftaran->kelas_semester ?? '') }}"
-                                    class="w-full bg-white border-2 border-red-100 rounded-xl px-4 py-3 focus:border-red-500"
-                                    placeholder="Kelas / Semester Anda" required>
-                            </div>
+
 
                             <div>
                                 <label class="block text-sm font-black text-gray-700 uppercase mb-2">Tempat Lahir</label>
@@ -300,13 +282,7 @@
                                     required>
                             </div>
 
-                            <div>
-                                <label class="block text-sm font-black text-gray-700 uppercase mb-2">Agama</label>
-                                <input type="text" name="agama"
-                                    value="{{ old('agama', $pendaftaran->agama ?? '') }}"
-                                    class="w-full bg-white border-2 border-red-100 rounded-xl px-4 py-3 focus:border-red-500"
-                                    placeholder="Agama" required>
-                            </div>
+
 
                             <div>
                                 <label class="block text-sm font-black text-gray-700 uppercase mb-2">Jenis Kelamin</label>

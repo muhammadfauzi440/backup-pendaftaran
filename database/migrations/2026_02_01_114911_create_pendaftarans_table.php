@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('kategori', ['siswa', 'mahasiswa']);
 
             $table->string('nim_nisn', 30)->unique();
-            $table->string('kelas_semester');
+
             $table->string('jurusan');
 
             $table->date('tanggal_mulai');
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->date('tanggal_lahir');
             $table->text('alamat');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
-            $table->string('agama');
+
             $table->string('kontak');
 
             $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('pending');

@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
                 'instansi_id'     => $instansis->random()->id,
                 'kode_pendaftaran'=> 'GIN-DEMO-' . strtoupper($status),
                 'kategori'        => rand(0, 1) ? 'siswa' : 'mahasiswa',
-                'kelas_semester'  => 'Semester 5',
+
                 'nim_nisn'        => rand(10000000, 99999999),
                 'jurusan'         => 'Teknik Informatika',
                 'tanggal_mulai'   => now()->addDays(14),
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
                 'tanggal_lahir'   => '2004-01-01',
                 'alamat'          => 'Jl Pegangsaan Timur',
                 'jenis_kelamin'   => 'laki-laki',
-                'agama'           => 'Islam',
+
                 'kontak'          => '081234567' . rand(100, 999),
                 'status'          => $status,
                 'catatan_admin'   => $status === 'pending' ? null : 'Catatan demo ' . $status,

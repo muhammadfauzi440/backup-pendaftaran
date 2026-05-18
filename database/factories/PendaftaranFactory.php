@@ -34,7 +34,7 @@ class PendaftaranFactory extends Factory
             'tipe_pendaftaran' => $this->faker->randomElement(['individu', 'kelompok']),
             'kategori' => $this->faker->randomElement(['siswa', 'mahasiswa']),
             'nim_nisn' => $this->faker->unique()->numerify('########'),
-            'kelas_semester' => $this->faker->randomElement(['Kelas 11', 'Kelas 12', 'Semester 5', 'Semester 7']),
+
             'jurusan' => $this->faker->randomElement(['Teknik Informatika', 'Sistem Informasi', 'Rekayasa Perangkat Lunak', 'Multimedia']),
             'tanggal_mulai' => $startDate->format('Y-m-d'),
             'tanggal_selesai' => $endDate->format('Y-m-d'),
@@ -43,7 +43,7 @@ class PendaftaranFactory extends Factory
             'tanggal_lahir' => $this->faker->dateTimeBetween('-25 years', '-17 years')->format('Y-m-d'),
             'alamat' => $this->faker->address(),
             'jenis_kelamin' => $this->faker->randomElement(['laki-laki', 'perempuan']),
-            'agama' => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha']),
+
             'kontak' => $this->faker->numerify('081#########'),
             'status' => $this->faker->randomElement(['pending', 'diterima', 'ditolak']),
             'catatan_admin' => $this->faker->optional(0.3)->sentence(),
