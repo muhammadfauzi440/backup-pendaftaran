@@ -133,15 +133,11 @@
                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
                                        Edit
                                     </a>
-                                    <form action="{{ route('admin.instansi.destroy', $i->id) }}" method="POST"
-                                          onsubmit="return confirm('Yakin ingin hapus data ini?')" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                                class="bg-red-600 text-white hover:bg-red-700 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                            onclick="confirmDeleteInstansi({{ $i->id }}, '{{ addslashes($i->nama_instansi) }}')"
+                                            class="bg-red-600 text-white hover:bg-red-700 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-sm">
+                                        Hapus
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -206,4 +202,38 @@
             </div>
         @endif
     </div>
+
+    {{-- Hidden form untuk SweetAlert delete --}}
+    <form id="deleteInstansiForm" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
+@push('scripts')
+<script>
+    function confirmDeleteInstansi(id, nama) {
+        Swal.fire({
+            title: 'Hapus Instansi?',
+            html: `Anda akan menghapus instansi <strong>${nama}</strong>.<br><span class="text-xs text-gray-500">Tindakan ini tidak bisa dibatalkan.</span>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#111827',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-[2rem]',
+                confirmButton: 'rounded-xl uppercase font-black tracking-widest text-[10px] px-6 py-3',
+                cancelButton: 'rounded-xl uppercase font-black tracking-widest text-[10px] px-6 py-3'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('deleteInstansiForm');
+                form.action = `/admin/instansi/${id}`;
+                form.submit();
+            }
+        });
+    }
+</script>
+@endpush
 @endsection

@@ -165,6 +165,7 @@
             kategoriData: {!! json_encode(array_values($kategoriStats ?? [])) !!}
         }
     </script>
+    @stack('scripts')
 </body>
 
 </html>
