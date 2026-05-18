@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+
 class PendaftaranController extends Controller
 {
     public function index(Request $request)
@@ -92,8 +93,12 @@ class PendaftaranController extends Controller
             $durasi = (int) $mulai->diffInMonths($selesai);
 
             $data = $request->except([
-                'dokumen', 'tipe_dokumen', 'anggota',
-                'status', 'catatan_admin', 'dokumen_id',
+                'dokumen',
+                'tipe_dokumen',
+                'anggota',
+                'status',
+                'catatan_admin',
+                'dokumen_id',
             ]);
 
             if ($request->instansi_id) {
@@ -158,16 +163,40 @@ class PendaftaranController extends Controller
             DB::commit();
 
             if ($isNewRegistration) {
+                $pendaftaran->refresh();
+
+                $waStatus = 'Sukses';
+                $waErrorMsg = '';
+                $emailStatus = 'Sukses';
+                $emailErrorMsg = '';
+
                 try {
-                    $pendaftaran->refresh();
-                    Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
-
                     $this->sendWhatsAppNotification($request->kontak, $pendaftaran->kode_pendaftaran);
-
-                    return redirect()->route('user.dashboard')->with('success', 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke email Anda.');
                 } catch (\Exception $e) {
-                    return redirect()->route('user.dashboard')->with('success', 'Pendaftaran berhasil disubmit TETAPI sistem gagal mengirim kode ke email Anda. Silahkan salin kode langsung dari Dashboard');
+                    $waStatus = 'Gagal';
+                    $waErrorMsg = $e->getMessage();
+                    Log::error("Kirim WA Pendaftaran Gagal: " . $waErrorMsg);
                 }
+
+                try {
+                    Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
+                } catch (\Exception $e) {
+                    $emailStatus = 'Gagal';
+                    $emailErrorMsg = $e->getMessage();
+                    Log::error("Kirim Email Pendaftaran Gagal: " . $emailErrorMsg);
+                }
+
+                if ($waStatus === 'Sukses' && $emailStatus === 'Sukses') {
+                    $pesanFlash = 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke WhatsApp dan Email Anda.';
+                } elseif ($waStatus === 'Sukses' && $emailStatus === 'Gagal') {
+                    $pesanFlash = 'Pendaftaran berhasil disubmit! Kode dikirim ke WhatsApp Anda, TETAPI gagal dikirim ke Email (Error: ' . $emailErrorMsg . ').';
+                } elseif ($waStatus === 'Gagal' && $emailStatus === 'Sukses') {
+                    $pesanFlash = 'Pendaftaran berhasil disubmit! Kode dikirim ke Email Anda, TETAPI gagal dikirim ke WhatsApp (Error: ' . $waErrorMsg . ').';
+                } else {
+                    $pesanFlash = "Pendaftaran berhasil! TETAPI gagal mengirim kode via Email ($emailErrorMsg) dan WhatsApp ($waErrorMsg). Silakan salin kode langsung dari Dashboard.";
+                }
+
+                return redirect()->route('user.dashboard')->with('success', $pesanFlash);
             }
 
             return redirect()->route('user.dashboard')->with('success', 'Data formulir berhasil diperbarui');
@@ -201,7 +230,6 @@ class PendaftaranController extends Controller
             }
 
             return response()->json(['success' => false, 'message' => 'Kode pendaftaran tidak ditemukan.']);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -227,20 +255,14 @@ class PendaftaranController extends Controller
         $pesan .= "Kode pendaftaran Anda adalah: *" . $kode . "*\n\n";
         $pesan .= "Silahkan gunakan kode ini untuk mengecek status pendaftaran Anda";
 
-        try {
-            $response = Http::post(env("WAHA_API_URL") . "/api/sendText", [
-                'session' => 'default',
-                'chatId' => $chatId,
-                'text' =>$pesan
-            ]);
+        $response = Http::timeout(10)->post(env("WAHA_API_URL") . '/api/sendText', [
+            'session' => 'default',
+            'chatId' => $chatId,
+            'text' => $pesan
+        ]);
 
-            if ($response->successful()) {
-                Log::info('Berhasil kirim pesan ke: ' . $no_hp);
-            } else {
-                Log::error('Gagal kirim pesan ke: ' . $no_hp);
-            }
-        } catch (\Exception $e) {
-            Log::error('Error kirim pesan: ' . $e->getMessage());
+        if (!$response->successful()) {
+            throw new \Exception("Status WAHA: " . $response->status() . " - " . $response->body());
         }
     }
 }
