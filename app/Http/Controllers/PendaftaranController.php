@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 class PendaftaranController extends Controller
 {
     public function index(Request $request)
@@ -51,7 +52,7 @@ class PendaftaranController extends Controller
                 'digits_between:5,30',
                 Rule::unique('pendaftarans', 'nim_nisn')->ignore($pendaftaran?->id),
             ],
-            'kelas_semester' => 'required|string',
+
             'jurusan' => 'required|string',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
@@ -59,7 +60,7 @@ class PendaftaranController extends Controller
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string',
             'jenis_kelamin' => 'required|in:laki-laki,perempuan',
-            'agama' => 'required|string',
+
             'kontak' => 'required|numeric|digits_between:8,20',
 
             'tipe_pendaftaran' => 'required|in:individu,kelompok',
@@ -68,11 +69,11 @@ class PendaftaranController extends Controller
             'anggota.*.nama' => 'required_with:anggota|string|max:255',
             'anggota.*.nim_nisn' => 'required_with:anggota|numeric|digits_between:5,30',
             'anggota.*.jurusan' => 'required_with:anggota|string|max:100',
-            'anggota.*.kelas_semester' => 'required_with:anggota|string|max:100',
+
             'anggota.*.tempat_lahir' => 'required_with:anggota|string|max:100',
             'anggota.*.tanggal_lahir' => 'required_with:anggota|date',
             'anggota.*.jenis_kelamin' => 'required_with:anggota|in:laki-laki,perempuan',
-            'anggota.*.agama' => 'required_with:anggota|string|max:50',
+
             'anggota.*.kontak' => 'required_with:anggota|numeric|digits_between:8,20',
             'anggota.*.alamat' => 'required_with:anggota|string',
 
@@ -161,6 +162,8 @@ class PendaftaranController extends Controller
                     $pendaftaran->refresh();
                     Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
 
+                    $this->sendWhatsAppNotification($request->kontak, $pendaftaran->kode_pendaftaran);
+
                     return redirect()->route('user.dashboard')->with('success', 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke email Anda.');
                 } catch (\Exception $e) {
                     return redirect()->route('user.dashboard')->with('success', 'Pendaftaran berhasil disubmit TETAPI sistem gagal mengirim kode ke email Anda. Silahkan salin kode langsung dari Dashboard');
@@ -209,6 +212,35 @@ class PendaftaranController extends Controller
                 'success' => false,
                 'message' => 'Terjadi kesalahan pada server. Coba lagi nanti.'
             ], 500);
+        }
+    }
+
+    private function sendWhatsAppNotification($no_hp, $kode)
+    {
+        if (substr($no_hp, 0, 1) === '0') {
+            $no_hp = '62' . substr($no_hp, 1);
+        }
+
+        $chatId = $no_hp . "@c.us";
+
+        $pesan = "Halo! Terima kasih telah mendaftar di Portal Magang PT Global Intermedia Nusantara.\n\n";
+        $pesan .= "Kode pendaftaran Anda adalah: *" . $kode . "*\n\n";
+        $pesan .= "Silahkan gunakan kode ini untuk mengecek status pendaftaran Anda";
+
+        try {
+            $response = Http::post(env("WAHA_API_URL") . "/api/sendText", [
+                'session' => 'default',
+                'chatId' => $chatId,
+                'text' =>$pesan
+            ]);
+
+            if ($response->successful()) {
+                Log::info('Berhasil kirim pesan ke: ' . $no_hp);
+            } else {
+                Log::error('Gagal kirim pesan ke: ' . $no_hp);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error kirim pesan: ' . $e->getMessage());
         }
     }
 }
