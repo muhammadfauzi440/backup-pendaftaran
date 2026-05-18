@@ -177,24 +177,38 @@ class PendaftaranController extends Controller
 
     public function cekStatusPublic(Request $request)
     {
-        $request->validate([
-            'kode' => 'required|string'
-        ]);
-
-        $kode = strtoupper($request->input('kode'));
-
-        $pendaftaran = Pendaftaran::with('user')
-            ->where('kode_pendaftaran', $kode)
-            ->first();
-
-        if ($pendaftaran) {
-            return response()->json([
-                'success' => true,
-                'nama'    => $pendaftaran->user->name,
-                'status'  => $pendaftaran->status,
+        try {
+            $validated = $request->validate([
+                'kode' => 'required|string|min:3|max:50'
             ]);
-        }
 
-        return response()->json(['success' => false]);
+            $kode = strtoupper(trim($validated['kode']));
+
+            $pendaftaran = Pendaftaran::with('user')
+                ->where('kode_pendaftaran', $kode)
+                ->first();
+
+            if ($pendaftaran) {
+                return response()->json([
+                    'success' => true,
+                    'nama'    => $pendaftaran->user->name ?? 'Tidak diketahui',
+                    'status'  => $pendaftaran->status,
+                    'catatan' => $pendaftaran->catatan_admin ?? null,
+                ]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Kode pendaftaran tidak ditemukan.']);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode pendaftaran tidak boleh kosong.'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan pada server. Coba lagi nanti.'
+            ], 500);
+        }
     }
 }

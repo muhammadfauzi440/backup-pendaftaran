@@ -7,6 +7,12 @@
     <title>Cek Status Pendaftaran | PT Global Intermedia</title>
     @vite(['resources/css/app.css', 'resources/js/cek-status.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-['Plus_Jakarta_Sans'] min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
 
