@@ -166,34 +166,31 @@ class PendaftaranController extends Controller
                 $pendaftaran->refresh();
 
                 $waStatus = 'Sukses';
-                $waErrorMsg = '';
                 $emailStatus = 'Sukses';
-                $emailErrorMsg = '';
 
+                
                 try {
                     $this->sendWhatsAppNotification($request->kontak, $pendaftaran->kode_pendaftaran);
                 } catch (\Exception $e) {
                     $waStatus = 'Gagal';
-                    $waErrorMsg = $e->getMessage();
-                    Log::error("Kirim WA Pendaftaran Gagal: " . $waErrorMsg);
+                    Log::error("Kirim WA Pendaftaran Gagal: " . $e->getMessage());
                 }
 
                 try {
                     Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
                 } catch (\Exception $e) {
                     $emailStatus = 'Gagal';
-                    $emailErrorMsg = $e->getMessage();
-                    Log::error("Kirim Email Pendaftaran Gagal: " . $emailErrorMsg);
+                    Log::error("Kirim Email Pendaftaran Gagal: " . $e->getMessage());
                 }
 
                 if ($waStatus === 'Sukses' && $emailStatus === 'Sukses') {
                     $pesanFlash = 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke WhatsApp dan Email Anda.';
                 } elseif ($waStatus === 'Sukses' && $emailStatus === 'Gagal') {
-                    $pesanFlash = 'Pendaftaran berhasil disubmit! Kode dikirim ke WhatsApp Anda, TETAPI gagal dikirim ke Email (Error: ' . $emailErrorMsg . ').';
+                    $pesanFlash = 'Pendaftaran berhasil! Kode dikirim ke WhatsApp Anda, namun gagal dikirim ke Email. Silakan salin kode langsung dari Dashboard.';
                 } elseif ($waStatus === 'Gagal' && $emailStatus === 'Sukses') {
-                    $pesanFlash = 'Pendaftaran berhasil disubmit! Kode dikirim ke Email Anda, TETAPI gagal dikirim ke WhatsApp (Error: ' . $waErrorMsg . ').';
+                    $pesanFlash = 'Pendaftaran berhasil! Kode dikirim ke Email Anda, namun sistem gagal mengirim ke WhatsApp. Silakan salin kode langsung dari Dashboard.';
                 } else {
-                    $pesanFlash = "Pendaftaran berhasil! TETAPI gagal mengirim kode via Email ($emailErrorMsg) dan WhatsApp ($waErrorMsg). Silakan salin kode langsung dari Dashboard.";
+                    $pesanFlash = "Pendaftaran berhasil! Namun sistem sedang sibuk sehingga kode gagal dikirim via Email & WhatsApp. Silakan salin kode langsung dari Dashboard.";
                 }
 
                 return redirect()->route('user.dashboard')->with('success', $pesanFlash);
@@ -251,11 +248,13 @@ class PendaftaranController extends Controller
 
         $chatId = $no_hp . "@c.us";
 
-        $pesan = "Halo! Terima kasih telah mendaftar di Portal Magang PT Global Intermedia Nusantara.\n\n";
+        $pesan = "Terima kasih telah mendaftar di Portal Magang PT Global Intermedia Nusantara.\n\n";
         $pesan .= "Kode pendaftaran Anda adalah: *" . $kode . "*\n\n";
         $pesan .= "Silahkan gunakan kode ini untuk mengecek status pendaftaran Anda";
 
-        $response = Http::timeout(10)->post(env("WAHA_API_URL") . '/api/sendText', [
+        $response = Http::withHeaders([
+            'X-Api-Key' => env('WAHA_API_KEY')
+        ])->timeout(10)->post(env('WAHA_API_URL') . '/api/sendText', [
             'session' => 'default',
             'chatId' => $chatId,
             'text' => $pesan

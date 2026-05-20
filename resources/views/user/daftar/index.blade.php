@@ -81,16 +81,16 @@
                             x-on:change="mode = $event.target.value === 'lain' ? 'lain' : 'pilih'"
                             class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4 focus:border-red-500 transition-colors">
                             <option value="" disabled {{ !old('instansi_id', $pendaftaran?->instansi_id) && !$pendaftaran?->instansi_lain ? 'selected' : '' }}>-- Pilih Instansi --</option>
+                            <option value="lain"
+                                {{ old('instansi_id') === 'lain' || $pendaftaran?->instansi_lain ? 'selected' : '' }}>
+                                Instansi lain (tidak ada dalam daftar)
+                            </option>
                             @foreach ($instansis as $inst)
                                 <option value="{{ $inst->id }}"
                                     {{ old('instansi_id', $pendaftaran?->instansi_id ?? '') == $inst->id ? 'selected' : '' }}>
                                     {{ $inst->nama_instansi }} ({{ strtoupper($inst->tipe) }})
                                 </option>
                             @endforeach
-                            <option value="lain"
-                                {{ old('instansi_id') === 'lain' || $pendaftaran?->instansi_lain ? 'selected' : '' }}>
-                                Instansi lain (tidak ada dalam daftar)
-                            </option>
                         </select>
 
                         {{-- Input teks muncul jika pilih "Instansi Lain" --}}
