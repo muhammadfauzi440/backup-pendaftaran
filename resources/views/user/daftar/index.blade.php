@@ -64,42 +64,168 @@
                     <h3 class="text-lg font-black text-gray-900 uppercase">Informasi Magang</h3>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="md:col-span-2"
-                        x-data="{
-                            mode: '{{ old('instansi_id', $pendaftaran?->instansi_id ? 'pilih' : ($pendaftaran?->instansi_lain ? 'lain' : 'pilih')) }}',
+                {{-- Script untuk logika custom dropdown instansi --}}
+                <script>
+                    function instansiDropdown() {
+                        return {
+                            open: false,
+                            mode: 'pilih',
+                            search: '',
+                            selectedLabel: '-- Pilih Instansi --',
+                            selectedValue: '{{ old('instansi_id', $pendaftaran?->instansi_id ?? '') }}',
+                            isLainSelected: {{ (old('instansi_id') === 'lain' || (!old('instansi_id') && $pendaftaran?->instansi_lain)) ? 'true' : 'false' }},
+                            instansis: @json($instansis->map(fn($i) => ['id' => (string)$i->id, 'label' => $i->nama_instansi . ' (' . strtoupper($i->tipe) . ')'])),
+
                             init() {
-                                @if(old('instansi_id') === 'lain' || (!old('instansi_id') && $pendaftaran?->instansi_lain))
+                                if (this.isLainSelected) {
                                     this.mode = 'lain';
-                                @endif
+                                    this.selectedValue = 'lain';
+                                    this.selectedLabel = 'Instansi lain (tidak ada dalam daftar)';
+                                } else if (this.selectedValue) {
+                                    const found = this.instansis.find(i => i.id === String(this.selectedValue));
+                                    if (found) this.selectedLabel = found.label;
+                                }
+                            },
+
+                            get filtered() {
+                                if (!this.search.trim()) return this.instansis;
+                                const q = this.search.toLowerCase();
+                                return this.instansis.filter(i => i.label.toLowerCase().includes(q));
+                            },
+
+                            selectInstansi(id, label) {
+                                this.selectedValue = id;
+                                this.selectedLabel = label;
+                                this.mode = 'pilih';
+                                this.open = false;
+                                this.search = '';
+                            },
+
+                            selectLain() {
+                                this.selectedValue = 'lain';
+                                this.selectedLabel = 'Instansi lain (tidak ada dalam daftar)';
+                                this.mode = 'lain';
+                                this.open = false;
+                                this.search = '';
                             }
-                        }">
+                        };
+                    }
+                </script>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2 relative" x-data="instansiDropdown()" @click.outside="open = false">
+
                         <label class="block text-sm font-black text-gray-700 uppercase mb-2">Asal Instansi / Sekolah</label>
 
-                        {{-- Dropdown pilih dari daftar --}}
-                        <select name="instansi_id"
-                            x-on:change="mode = $event.target.value === 'lain' ? 'lain' : 'pilih'"
-                            class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-5 py-4 focus:border-red-500 transition-colors">
-                            <option value="" disabled {{ !old('instansi_id', $pendaftaran?->instansi_id) && !$pendaftaran?->instansi_lain ? 'selected' : '' }}>-- Pilih Instansi --</option>
-                            <option value="lain"
-                                {{ old('instansi_id') === 'lain' || $pendaftaran?->instansi_lain ? 'selected' : '' }}>
-                                Instansi lain (tidak ada dalam daftar)
-                            </option>
-                            @foreach ($instansis as $inst)
-                                <option value="{{ $inst->id }}"
-                                    {{ old('instansi_id', $pendaftaran?->instansi_id ?? '') == $inst->id ? 'selected' : '' }}>
-                                    {{ $inst->nama_instansi }} ({{ strtoupper($inst->tipe) }})
-                                </option>
-                            @endforeach
-                        </select>
+                        {{-- Hidden input untuk submit form --}}
+                        <input type="hidden" name="instansi_id" :value="selectedValue">
+
+                        {{-- Trigger Button --}}
+                        <button type="button"
+                            id="instansi-dropdown-trigger"
+                            @click="open = !open"
+                            class="w-full border-2 rounded-xl px-5 py-4 text-left text-sm font-semibold flex items-center justify-between gap-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-200"
+                            :class="selectedValue === 'lain'
+                                ? 'border-amber-400 bg-amber-50 text-amber-800'
+                                : (selectedValue ? 'border-red-400 bg-red-50 text-gray-800' : 'border-gray-200 bg-gray-50 text-gray-400')">
+                            <span x-text="selectedLabel" class="truncate flex-1"></span>
+                            <svg class="w-5 h-5 shrink-0 transition-transform duration-200"
+                                :class="open ? 'rotate-180' : ''"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        {{-- Dropdown Panel --}}
+                        <div x-show="open"
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute left-0 right-0 z-50 mt-2 bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden"
+                             style="display: none;">
+
+                            {{-- Search --}}
+                            <div class="p-3 border-b border-gray-100 bg-gray-50/80">
+                                <div class="relative">
+                                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                                    </svg>
+                                    <input type="text"
+                                        x-model="search"
+                                        @click.stop
+                                        placeholder="Cari nama instansi..."
+                                        class="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-red-400 transition-colors">
+                                </div>
+                            </div>
+
+                            <div class="overflow-y-auto" style="max-height: 280px;">
+
+                                {{-- Opsi Khusus: Instansi Lain --}}
+                                <button type="button"
+                                    @click="selectLain()"
+                                    class="w-full px-4 py-3.5 flex items-center gap-3 text-left border-b-2 border-amber-100 bg-amber-50 hover:bg-amber-100 transition-colors group">
+                                    <span class="shrink-0 w-8 h-8 rounded-lg bg-amber-200 text-amber-700 flex items-center justify-center group-hover:bg-amber-300 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-black text-amber-800">Instansi lain (tidak ada dalam daftar)</p>
+                                        <p class="text-xs text-amber-600 font-medium mt-0.5">Klik untuk mengetik nama instansi Anda sendiri</p>
+                                    </div>
+                                </button>
+
+                                {{-- Pemisah --}}
+                                <div class="px-4 py-2 bg-gray-50 border-b border-gray-100">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Daftar Instansi Tersedia</p>
+                                </div>
+
+                                {{-- List Instansi --}}
+                                <template x-for="inst in filtered" :key="inst.id">
+                                    <button type="button"
+                                        @click="selectInstansi(inst.id, inst.label)"
+                                        class="w-full px-4 py-3 flex items-center gap-3 text-left text-sm transition-colors border-b border-gray-50 last:border-0"
+                                        :class="selectedValue === inst.id ? 'bg-red-50 text-red-700 font-bold' : 'text-gray-700 hover:bg-gray-50'">
+                                        <span class="w-2 h-2 rounded-full shrink-0 transition-colors"
+                                              :class="selectedValue === inst.id ? 'bg-red-500' : 'bg-gray-300'"></span>
+                                        <span class="flex-1 truncate" x-text="inst.label"></span>
+                                        <svg x-show="selectedValue === inst.id"
+                                            class="w-4 h-4 text-red-500 shrink-0"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </button>
+                                </template>
+
+                                {{-- Kosong --}}
+                                <div x-show="filtered.length === 0" class="px-4 py-10 text-center">
+                                    <svg class="w-10 h-10 mx-auto mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <p class="text-sm text-gray-400 font-medium">Instansi tidak ditemukan</p>
+                                </div>
+                            </div>
+                        </div>
 
                         {{-- Input teks muncul jika pilih "Instansi Lain" --}}
                         <div x-show="mode === 'lain'"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
-                             class="mt-3">
-                            <label class="block text-xs font-black text-red-600 uppercase mb-2 tracking-wider">
+                             class="mt-3"
+                             style="display: none;">
+                            <label class="block text-xs font-black text-amber-600 uppercase mb-2 tracking-wider items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
                                 Tulis Nama Instansi / Sekolah Anda
                             </label>
                             <input type="text"
@@ -107,8 +233,13 @@
                                 value="{{ old('instansi_lain', $pendaftaran?->instansi_lain ?? '') }}"
                                 placeholder="Contoh: SMK Muhammadiyah 3 Yogyakarta"
                                 :required="mode === 'lain'"
-                                class="w-full bg-white border-2 border-red-200 rounded-xl px-5 py-4 text-sm focus:border-red-500 outline-none transition-colors placeholder-gray-400">
-                            <p class="text-xs text-gray-400 mt-1.5">Data ini akan ditinjau admin. Pastikan nama instansi sudah benar.</p>
+                                class="w-full bg-amber-50 border-2 border-amber-300 rounded-xl px-5 py-4 text-sm focus:border-amber-500 outline-none transition-colors text-amber-900 placeholder-amber-300">
+                            <p class="text-xs text-amber-500 mt-1.5 flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                Data ini akan ditinjau admin. Pastikan nama instansi sudah benar.
+                            </p>
                         </div>
                     </div>
 
