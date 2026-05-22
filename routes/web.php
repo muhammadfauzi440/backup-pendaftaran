@@ -65,7 +65,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index_user'])->name('user.dashboard');
     Route::get('/user/daftar', [PendaftaranController::class, 'index'])->name('user.daftar');
-    Route::post('/user/daftar/submit', [PendaftaranController::class, 'storeOrUpdate'])->name('user.daftar.submit');
+    Route::post('/user/daftar', [PendaftaranController::class, 'store'])->name('user.daftar.store');
+    Route::put('/user/daftar', [PendaftaranController::class, 'update'])->name('user.daftar.update');
 
     Route::get('/user/profile', [ProfileController::class, 'index_user'])->name('profile.index');
     Route::put('/user/profile/update', [ProfileController::class, 'update'])->name('profile.update');

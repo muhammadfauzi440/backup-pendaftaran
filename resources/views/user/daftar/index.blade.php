@@ -30,8 +30,11 @@
             </div>
         @endif
 
-        <form action="{{ route('user.daftar.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form action="{{ $pendaftaran ? route('user.daftar.update') : route('user.daftar.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
+            @if ($pendaftaran)
+                @method('PUT')
+            @endif
 
             <div>
                 <label class="block text-sm font-black text-gray-700 uppercase mb-2">Tipe Pendaftaran</label>

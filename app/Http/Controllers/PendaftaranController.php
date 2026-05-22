@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 class PendaftaranController extends Controller
 {
+    //public function
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -30,176 +31,50 @@ class PendaftaranController extends Controller
         return view('user.daftar.index', compact('pendaftaran', 'instansis', 'tipe'));
     }
 
-    public function storeOrUpdate(Request $request)
+    public function store(Request $request)
     {
         $user = Auth::user();
-        $pendaftaran = Pendaftaran::where('user_id', $user->id)->first();
 
-        if ($pendaftaran) {
-            Gate::authorize('update', $pendaftaran);
-        }
-
-        if ($request->instansi_id === 'lain') {
-            $request->merge(['instansi_id' => null]);
-        }
-
-        $rules = [
-            'instansi_id'   => 'required_without:instansi_lain|nullable|exists:instansis,id',
-            'instansi_lain' => 'required_without:instansi_id|nullable|string|max:255',
-            'kategori' => 'required|in:siswa,mahasiswa',
-            'nim_nisn' => [
-                'required',
-                'numeric',
-                'digits_between:5,30',
-                Rule::unique('pendaftarans', 'nim_nisn')->ignore($pendaftaran?->id),
-            ],
-
-            'jurusan' => 'required|string',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string',
-            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
-
-            'kontak' => 'required|numeric|digits_between:8,20',
-
-            'tipe_pendaftaran' => 'required|in:individu,kelompok',
-
-            'anggota' => 'nullable|array',
-            'anggota.*.nama' => 'required_with:anggota|string|max:255',
-            'anggota.*.nim_nisn' => 'required_with:anggota|numeric|digits_between:5,30',
-            'anggota.*.jurusan' => 'required_with:anggota|string|max:100',
-
-            'anggota.*.tempat_lahir' => 'required_with:anggota|string|max:100',
-            'anggota.*.tanggal_lahir' => 'required_with:anggota|date',
-            'anggota.*.jenis_kelamin' => 'required_with:anggota|in:laki-laki,perempuan',
-
-            'anggota.*.kontak' => 'required_with:anggota|numeric|digits_between:8,20',
-            'anggota.*.alamat' => 'required_with:anggota|string',
-
-            'dokumen' => $pendaftaran ? 'nullable|array' : 'required|array|min:1',
-            'dokumen.*' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'tipe_dokumen' => 'required|array',
-            'tipe_dokumen.*' => 'required|string',
-        ];
-
-        $request->validate($rules);
+        $this->normalizeInstansiId($request);
+        $request->validate($this->getValidationRules(isUpdate: false));
 
         DB::beginTransaction();
         try {
-            $mulai = \Carbon\Carbon::parse($request->tanggal_mulai);
-            $selesai = \Carbon\Carbon::parse($request->tanggal_selesai);
-            $durasi = (int) $mulai->diffInMonths($selesai);
-
-            $data = $request->except([
-                'dokumen',
-                'tipe_dokumen',
-                'anggota',
-                'status',
-                'catatan_admin',
-                'dokumen_id',
-            ]);
-
-            if ($request->instansi_id) {
-                $data['instansi_id']   = $request->instansi_id;
-                $data['instansi_lain'] = null;
-            } else {
-                $data['instansi_id']   = null;
-                $data['instansi_lain'] = $request->instansi_lain;
-            }
-
-            $data['user_id']       = $user->id;
-            $data['durasi_bulan']  = $durasi ?? 0;
-
-            $isNewRegistration = false;
-
-            if ($pendaftaran) {
-                $pendaftaran->update($data);
-            } else {
-                $pendaftaran = Pendaftaran::create($data);
-                $isNewRegistration = true;
-            }
-
-            if ($request->tipe_pendaftaran === 'kelompok' && $request->has('anggota')) {
-                $pendaftaran->anggota()->delete();
-                $pendaftaran->anggota()->createMany($request->anggota);
-            } elseif ($request->tipe_pendaftaran === 'individu') {
-                $pendaftaran->anggota()->delete();
-            }
-
-            if (!empty($request->dokumen_id)) {
-                foreach ($request->dokumen_id as $idx => $dokId) {
-                    $fieldName = 'dokumen_' . $dokId;
-                    if ($request->hasFile($fieldName) && $request->file($fieldName)->isValid()) {
-                        $oldDok = Dokumen::find($dokId);
-                        if ($oldDok) {
-                            if (Storage::disk('public')->exists($oldDok->file_path)) {
-                                Storage::disk('public')->delete($oldDok->file_path);
-                            }
-                            $path = $request->file($fieldName)->store('pendaftaran/dokumen', 'public');
-                            $oldDok->update([
-                                'file_path'    => $path,
-                                'nama_dokumen' => $request->file($fieldName)->getClientOriginalName(),
-                            ]);
-                        }
-                    }
-                }
-            } elseif ($request->hasFile('dokumen')) {
-                $tipeList = $request->tipe_dokumen ?? [];
-                foreach ($request->file('dokumen') as $key => $file) {
-                    if ($file->isValid()) {
-                        $path = $file->store('pendaftaran/dokumen', 'public');
-                        Dokumen::create([
-                            'pendaftaran_id' => $pendaftaran->id,
-                            'tipe_dokumen'   => $tipeList[$key] ?? 'Lainnya',
-                            'nama_dokumen'   => $file->getClientOriginalName(),
-                            'file_path'      => $path,
-                        ]);
-                    }
-                }
-            }
-
+            $pendaftaran = Pendaftaran::create($this->buildPendaftaranData($request, $user->id));
+            $this->handleAnggota($pendaftaran, $request);
+            $this->handleDokumenBaru($pendaftaran, $request);
             DB::commit();
 
-            if ($isNewRegistration) {
-                $pendaftaran->refresh();
+            $pendaftaran->refresh();
+            $pesan = $this->sendNewRegistrationNotifications($pendaftaran, $user, $request->kontak);
 
-                $waStatus = 'Sukses';
-                $emailStatus = 'Sukses';
+            return redirect()->route('user.dashboard')->with('success', $pesan);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Gagal: ' . $e->getMessage());
+        }
+    }
 
-                
-                try {
-                    $this->sendWhatsAppNotification($request->kontak, $pendaftaran->kode_pendaftaran);
-                } catch (\Exception $e) {
-                    $waStatus = 'Gagal';
-                    Log::error("Kirim WA Pendaftaran Gagal: " . $e->getMessage());
-                }
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        $pendaftaran = Pendaftaran::where('user_id', $user->id)->firstOrFail();
 
-                try {
-                    Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
-                } catch (\Exception $e) {
-                    $emailStatus = 'Gagal';
-                    Log::error("Kirim Email Pendaftaran Gagal: " . $e->getMessage());
-                }
+        Gate::authorize('update', $pendaftaran);
 
-                if ($waStatus === 'Sukses' && $emailStatus === 'Sukses') {
-                    $pesanFlash = 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke WhatsApp dan Email Anda.';
-                } elseif ($waStatus === 'Sukses' && $emailStatus === 'Gagal') {
-                    $pesanFlash = 'Pendaftaran berhasil! Kode dikirim ke WhatsApp Anda, namun gagal dikirim ke Email. Silakan salin kode langsung dari Dashboard.';
-                } elseif ($waStatus === 'Gagal' && $emailStatus === 'Sukses') {
-                    $pesanFlash = 'Pendaftaran berhasil! Kode dikirim ke Email Anda, namun sistem gagal mengirim ke WhatsApp. Silakan salin kode langsung dari Dashboard.';
-                } else {
-                    $pesanFlash = "Pendaftaran berhasil! Namun sistem sedang sibuk sehingga kode gagal dikirim via Email & WhatsApp. Silakan salin kode langsung dari Dashboard.";
-                }
+        $this->normalizeInstansiId($request);
+        $request->validate($this->getValidationRules(isUpdate: true, pendaftaranId: $pendaftaran->id));
 
-                return redirect()->route('user.dashboard')->with('success', $pesanFlash);
-            }
+        DB::beginTransaction();
+        try {
+            $pendaftaran->update($this->buildPendaftaranData($request, $user->id));
+            $this->handleAnggota($pendaftaran, $request);
+            $this->handleDokumenUpdate($pendaftaran, $request);
+            DB::commit();
 
             return redirect()->route('user.dashboard')->with('success', 'Data formulir berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
-
             return back()->withInput()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }
@@ -240,25 +115,208 @@ class PendaftaranController extends Controller
         }
     }
 
-    private function sendWhatsAppNotification($no_hp, $kode)
+    //private function
+
+    /**
+     * Ubah nilai 'lain' pada instansi_id menjadi null agar lolos validasi exists.
+     */
+    private function normalizeInstansiId(Request $request): void
     {
-        if (substr($no_hp, 0, 1) === '0') {
+        if ($request->instansi_id === 'lain') {
+            $request->merge(['instansi_id' => null]);
+        }
+    }
+
+    /**
+     * Kembalikan aturan validasi. Bedakan antara store (dokumen wajib)
+     * dan update (dokumen opsional, nim_nisn ignore record saat ini).
+     */
+    private function getValidationRules(bool $isUpdate, ?int $pendaftaranId = null): array
+    {
+        return [
+            'instansi_id'   => 'required_without:instansi_lain|nullable|exists:instansis,id',
+            'instansi_lain' => 'required_without:instansi_id|nullable|string|max:255',
+            'kategori'      => 'required|in:siswa,mahasiswa',
+            'nim_nisn'      => [
+                'required',
+                'numeric',
+                'digits_between:5,30',
+                Rule::unique('pendaftarans', 'nim_nisn')->ignore($pendaftaranId),
+            ],
+
+            'jurusan'          => 'required|string',
+            'tanggal_mulai'    => 'required|date',
+            'tanggal_selesai'  => 'required|date|after:tanggal_mulai',
+            'tempat_lahir'     => 'required|string',
+            'tanggal_lahir'    => 'required|date',
+            'alamat'           => 'required|string',
+            'jenis_kelamin'    => 'required|in:laki-laki,perempuan',
+            'kontak'           => 'required|numeric|digits_between:8,20',
+            'tipe_pendaftaran' => 'required|in:individu,kelompok',
+
+            'anggota'                   => 'nullable|array',
+            'anggota.*.nama'            => 'required_with:anggota|string|max:255',
+            'anggota.*.nim_nisn'        => 'required_with:anggota|numeric|digits_between:5,30',
+            'anggota.*.jurusan'         => 'required_with:anggota|string|max:100',
+            'anggota.*.tempat_lahir'    => 'required_with:anggota|string|max:100',
+            'anggota.*.tanggal_lahir'   => 'required_with:anggota|date',
+            'anggota.*.jenis_kelamin'   => 'required_with:anggota|in:laki-laki,perempuan',
+            'anggota.*.kontak'          => 'required_with:anggota|numeric|digits_between:8,20',
+            'anggota.*.alamat'          => 'required_with:anggota|string',
+
+            'dokumen'       => $isUpdate ? 'nullable|array' : 'required|array|min:1',
+            'dokumen.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'tipe_dokumen'  => 'required|array',
+            'tipe_dokumen.*' => 'required|string',
+        ];
+    }
+
+    /**
+     * Susun array data utama Pendaftaran dari request.
+     */
+    private function buildPendaftaranData(Request $request, int $userId): array
+    {
+        $data = $request->except(['dokumen', 'tipe_dokumen', 'anggota', 'status', 'catatan_admin', 'dokumen_id']);
+
+        if ($request->instansi_id) {
+            $data['instansi_id']   = $request->instansi_id;
+            $data['instansi_lain'] = null;
+        } else {
+            $data['instansi_id']   = null;
+            $data['instansi_lain'] = $request->instansi_lain;
+        }
+
+        $data['user_id']      = $userId;
+        $data['durasi_bulan'] = (int) \Carbon\Carbon::parse($request->tanggal_mulai)
+            ->diffInMonths(\Carbon\Carbon::parse($request->tanggal_selesai));
+
+        return $data;
+    }
+
+    /**
+     * Simpan atau hapus data anggota kelompok sesuai tipe pendaftaran.
+     */
+    private function handleAnggota(Pendaftaran $pendaftaran, Request $request): void
+    {
+        if ($request->tipe_pendaftaran === 'kelompok' && $request->has('anggota')) {
+            $pendaftaran->anggota()->delete();
+            $pendaftaran->anggota()->createMany($request->anggota);
+        } elseif ($request->tipe_pendaftaran === 'individu') {
+            $pendaftaran->anggota()->delete();
+        }
+    }
+
+    /**
+     * Upload dan simpan dokumen-dokumen baru (untuk store, atau tambah dokumen baru saat update).
+     */
+    private function handleDokumenBaru(Pendaftaran $pendaftaran, Request $request): void
+    {
+        if (!$request->hasFile('dokumen')) {
+            return;
+        }
+
+        $tipeList = $request->tipe_dokumen ?? [];
+        foreach ($request->file('dokumen') as $key => $file) {
+            if ($file->isValid()) {
+                $path = $file->store('pendaftaran/dokumen', 'public');
+                Dokumen::create([
+                    'pendaftaran_id' => $pendaftaran->id,
+                    'tipe_dokumen'   => $tipeList[$key] ?? 'Lainnya',
+                    'nama_dokumen'   => $file->getClientOriginalName(),
+                    'file_path'      => $path,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Ganti file dokumen yang sudah ada (berdasarkan ID), atau tambah dokumen baru.
+     */
+    private function handleDokumenUpdate(Pendaftaran $pendaftaran, Request $request): void
+    {
+        if (!empty($request->dokumen_id)) {
+
+            foreach ($request->dokumen_id as $dokId) {
+                $fieldName = 'dokumen_' . $dokId;
+                if (!$request->hasFile($fieldName) || !$request->file($fieldName)->isValid()) {
+                    continue;
+                }
+
+                $oldDok = Dokumen::find($dokId);
+                if (!$oldDok) {
+                    continue;
+                }
+
+                if (Storage::disk('public')->exists($oldDok->file_path)) {
+                    Storage::disk('public')->delete($oldDok->file_path);
+                }
+
+                $oldDok->update([
+                    'file_path'    => $request->file($fieldName)->store('pendaftaran/dokumen', 'public'),
+                    'nama_dokumen' => $request->file($fieldName)->getClientOriginalName(),
+                ]);
+            }
+
+            return;
+        }
+
+        $this->handleDokumenBaru($pendaftaran, $request);
+    }
+
+    /**
+     * Kirim notifikasi WhatsApp dan Email setelah pendaftaran baru berhasil.
+     * Kembalikan pesan flash yang sesuai dengan status pengiriman.
+     */
+    private function sendNewRegistrationNotifications(Pendaftaran $pendaftaran, $user, string $kontak): string
+    {
+        $waStatus    = 'Sukses';
+        $emailStatus = 'Sukses';
+
+        try {
+            $this->sendWhatsAppNotification($kontak, $pendaftaran->kode_pendaftaran);
+        } catch (\Exception $e) {
+            $waStatus = 'Gagal';
+            Log::error("Kirim WA Pendaftaran Gagal: " . $e->getMessage());
+        }
+
+        try {
+            Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
+        } catch (\Exception $e) {
+            $emailStatus = 'Gagal';
+            Log::error("Kirim Email Pendaftaran Gagal: " . $e->getMessage());
+        }
+
+        if ($waStatus === 'Sukses' && $emailStatus === 'Sukses') {
+            return 'Pendaftaran berhasil disubmit! Kode Pendaftaran telah dikirim ke WhatsApp dan Email Anda.';
+        } elseif ($waStatus === 'Sukses' && $emailStatus === 'Gagal') {
+            return 'Pendaftaran berhasil! Kode dikirim ke WhatsApp Anda, namun gagal dikirim ke Email. Silakan salin kode langsung dari Dashboard.';
+        } elseif ($waStatus === 'Gagal' && $emailStatus === 'Sukses') {
+            return 'Pendaftaran berhasil! Kode dikirim ke Email Anda, namun sistem gagal mengirim ke WhatsApp. Silakan salin kode langsung dari Dashboard.';
+        } else {
+            return 'Pendaftaran berhasil! Namun sistem sedang sibuk sehingga kode gagal dikirim via Email & WhatsApp. Silakan salin kode langsung dari Dashboard.';
+        }
+    }
+
+    /**
+     * Kirim pesan WhatsApp via WAHA API.
+     */
+    private function sendWhatsAppNotification(string $no_hp, string $kode): void
+    {
+        if (str_starts_with($no_hp, '0')) {
             $no_hp = '62' . substr($no_hp, 1);
         }
 
-        $chatId = $no_hp . "@c.us";
-
-        $pesan = "Terima kasih telah mendaftar di Portal Magang PT Global Intermedia Nusantara.\n\n";
-        $pesan .= "Kode pendaftaran Anda adalah: *" . $kode . "*\n\n";
+        $pesan  = "Terima kasih telah mendaftar di Portal Magang PT Global Intermedia Nusantara.\n\n";
+        $pesan .= "Kode pendaftaran Anda adalah: *{$kode}*\n\n";
         $pesan .= "Silahkan gunakan kode ini untuk mengecek status pendaftaran Anda";
 
-        $response = Http::withHeaders([
-            'X-Api-Key' => env('WAHA_API_KEY')
-        ])->timeout(10)->post(env('WAHA_API_URL') . '/api/sendText', [
-            'session' => 'default',
-            'chatId' => $chatId,
-            'text' => $pesan
-        ]);
+        $response = Http::withHeaders(['X-Api-Key' => env('WAHA_API_KEY')])
+            ->timeout(10)
+            ->post(env('WAHA_API_URL') . '/api/sendText', [
+                'session' => 'default',
+                'chatId'  => $no_hp . '@c.us',
+                'text'    => $pesan,
+            ]);
 
         if (!$response->successful()) {
             throw new \Exception("Status WAHA: " . $response->status() . " - " . $response->body());
