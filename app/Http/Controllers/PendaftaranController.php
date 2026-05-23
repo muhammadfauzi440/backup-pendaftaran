@@ -115,6 +115,44 @@ class PendaftaranController extends Controller
         }
     }
 
+    public function resendNotifikasi(Request $request)
+    {
+        $user        = Auth::user();
+        $pendaftaran = Pendaftaran::where('user_id', $user->id)->first();
+
+        if (!$pendaftaran) {
+            return redirect()->route('user.dashboard')
+                ->with('error', 'Data pendaftaran tidak ditemukan.');
+        }
+
+        $channel = $request->input('channel'); // 'buat whatsapp' atau 'email'
+
+        if ($channel === 'whatsapp') {
+            try {
+                $this->sendWhatsAppNotification($pendaftaran->kontak, $pendaftaran->kode_pendaftaran);
+                return redirect()->route('user.dashboard')
+                    ->with('success', 'Kode pendaftaran berhasil dikirim ulang via WhatsApp ke nomor ' . $pendaftaran->kontak . '.');
+            } catch (\Exception $e) {
+                Log::error('Resend WA Gagal: ' . $e->getMessage());
+                return redirect()->route('user.dashboard')
+                    ->with('error', 'Gagal mengirim notifikasi via WhatsApp. Pastikan nomor HP Anda aktif dan coba beberapa saat lagi.');
+            }
+        } elseif ($channel === 'email') {
+            try {
+                Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
+                return redirect()->route('user.dashboard')
+                    ->with('success', 'Kode pendaftaran berhasil dikirim ulang via Email ke ' . $user->email . '.');
+            } catch (\Exception $e) {
+                Log::error('Resend Email Gagal: ' . $e->getMessage());
+                return redirect()->route('user.dashboard')
+                    ->with('error', 'Gagal mengirim notifikasi via Email. Silakan coba beberapa saat lagi.');
+            }
+        }
+
+        return redirect()->route('user.dashboard')
+            ->with('error', 'Pilihan channel tidak valid.');
+    }
+
     //private function
 
     /**

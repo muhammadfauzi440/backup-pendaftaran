@@ -72,4 +72,5 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::put('/user/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/user/cetak-surat', [DashboardController::class, 'cetakSurat'])->name('user.cetak-surat');
+    Route::post('/user/resend-notifikasi', [PendaftaranController::class, 'resendNotifikasi'])->name('user.resend-notifikasi');
 });

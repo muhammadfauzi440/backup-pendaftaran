@@ -14,7 +14,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-[#FDFDFD] font-['Plus_Jakarta_Sans'] overflow-x-hidden" x-data="{ sidebarOpen: window.innerWidth >= 768 }">
+<body class="bg-[#FDFDFD] font-['Plus_Jakarta_Sans'] overflow-x-hidden" x-data="{ sidebarOpen: window.innerWidth >= 768, showNotifModal: false }">
 
     <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false"
         class="fixed inset-0 z-55 bg-gray-900/50 backdrop-blur-sm md:hidden" aria-hidden="true" style="display: none;">
@@ -193,6 +193,20 @@
                                         </button>
                                     </div>
 
+                                    {{-- Tombol Kirim Ulang Notifikasi --}}
+                                    <div class="mt-4 mb-2">
+                                        <button
+                                            @click="showNotifModal = true"
+                                            id="btn-kirim-ulang-notifikasi"
+                                            type="button"
+                                            class="w-full flex items-center justify-center gap-2 px-5 py-3 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 hover:border-indigo-300 text-indigo-700 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all transform hover:-translate-y-0.5 shadow-sm hover:shadow-md group">
+                                            <svg class="w-4 h-4 shrink-0 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                            </svg>
+                                            <span>Kirim Ulang Notifikasi</span>
+                                        </button>
+                                    </div>
+
                                     <div class="space-y-4 mt-2">
                                         <div
                                             class="flex flex-col sm:flex-row sm:justify-between border-b border-gray-50 pb-3 sm:items-end gap-1">
@@ -311,6 +325,105 @@
         </div>
     </div>
 
+    {{-- Modal Pilihan Kirim Ulang Notifikasi --}}
+    <div
+        x-show="showNotifModal"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+        style="display: none;"
+        @click.self="showNotifModal = false">
+
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+
+        {{-- Modal Card --}}
+        <div
+            x-show="showNotifModal"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+            class="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 z-10">
+
+            {{-- Close button --}}
+            <button @click="showNotifModal = false"
+                class="absolute top-5 right-5 p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            {{-- Header --}}
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-black text-gray-900 text-sm uppercase tracking-widest">Kirim Ulang Notifikasi</h3>
+                    <p class="text-gray-400 text-[11px] font-medium mt-0.5">Pilih metode pengiriman kode pendaftaran</p>
+                </div>
+            </div>
+
+            {{-- Info kode --}}
+            <div class="bg-gray-50 rounded-2xl px-5 py-3 mb-6 border border-gray-100">
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Kode Pendaftaran</span>
+                <span class="text-lg font-black text-gray-900 tracking-widest">{{ $pendaftaran->kode_pendaftaran ?? '-' }}</span>
+            </div>
+
+            {{-- 2 Tombol Pilihan --}}
+            <div class="space-y-3">
+
+                {{-- WhatsApp --}}
+                <form action="{{ route('user.resend-notifikasi') }}" method="POST" id="form-resend-wa">
+                    @csrf
+                    <input type="hidden" name="channel" value="whatsapp">
+                    <button type="submit" id="btn-resend-wa"
+                        class="w-full flex items-center gap-4 px-5 py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all transform hover:-translate-y-0.5 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 group">
+                        <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.944 0A12 12 0 000 12a12 12 0 003.537 8.528L2 24l3.666-1.155A11.95 11.95 0 0011.944 24c6.627 0 12-5.373 12-12S18.571 0 11.944 0zM12 21.823a9.78 9.78 0 01-4.992-1.353l-.358-.212-2.484.783.664-2.424-.233-.37A9.78 9.78 0 012.18 12c0-5.414 4.406-9.82 9.82-9.82 5.414 0 9.82 4.406 9.82 9.82 0 5.414-4.406 9.82-9.82 9.82zm5.385-7.348c-.295-.148-1.745-.862-2.015-.96-.27-.099-.467-.148-.664.148-.196.296-.761.961-.933 1.158-.172.197-.344.222-.64.074-.295-.148-1.245-.458-2.37-1.295-.875-.652-1.465-1.458-1.637-1.754-.172-.296-.018-.456.13-.604.133-.133.295-.345.443-.518.148-.173.196-.296.295-.494.099-.197.049-.37-.024-.518-.074-.148-.664-1.601-.909-2.193-.241-.578-.485-.5-.664-.509-.172-.009-.37-.009-.567-.009-.196 0-.516.074-.787.37-.27.296-1.033 1.011-1.033 2.466 0 1.455 1.057 2.862 1.205 3.06.148.197 2.087 3.183 5.053 4.461.705.302 1.255.482 1.684.617.708.224 1.352.192 1.86.116.571-.085 1.745-.713 1.991-1.403.246-.69.246-1.282.172-1.403-.074-.123-.27-.197-.565-.345z"/>
+                            </svg>
+                        </div>
+                        <div class="text-left">
+                            <span class="block">Kirim via WhatsApp</span>
+                            <span class="text-white/70 text-[9px] font-bold normal-case tracking-normal">Notifikasi dikirim ke nomor HP Anda</span>
+                        </div>
+                    </button>
+                </form>
+
+                {{-- Email --}}
+                <form action="{{ route('user.resend-notifikasi') }}" method="POST" id="form-resend-email">
+                    @csrf
+                    <input type="hidden" name="channel" value="email">
+                    <button type="submit" id="btn-resend-email"
+                        class="w-full flex items-center gap-4 px-5 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all transform hover:-translate-y-0.5 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 group">
+                        <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="text-left">
+                            <span class="block">Kirim via Email</span>
+                            <span class="text-white/70 text-[9px] font-bold normal-case tracking-normal">Notifikasi dikirim ke alamat email Anda</span>
+                        </div>
+                    </button>
+                </form>
+
+            </div>
+
+            <p class="text-center text-[10px] text-gray-400 font-medium mt-5">Kode akan dikirimkan ulang ke kontak yang terdaftar</p>
+        </div>
+    </div>
+
     @if (session('success'))
         <script>
             Swal.fire({
@@ -318,6 +431,21 @@
                 title: 'BERHASIL',
                 text: "{{ session('success') }}",
                 confirmButtonColor: '#111827',
+                customClass: {
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl uppercase font-black tracking-widest text-xs py-3 px-6'
+                }
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'GAGAL',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#dc2626',
                 customClass: {
                     popup: 'rounded-[2rem]',
                     confirmButton: 'rounded-xl uppercase font-black tracking-widest text-xs py-3 px-6'
