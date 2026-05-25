@@ -172,10 +172,9 @@ Buat dan jalankan container dengan konfigurasi environment kustom berikut:
 docker run -d \
   --name waha \
   -p 3000:3000 \
-  -e WHATSAPP_DASHBOARD_ENABLED=true \
-  -e WHATSAPP_DASHBOARD_USERNAME=admin \
-  -e WHATSAPP_DASHBOARD_PASSWORD=admin123 \
-  -e WHATSAPP_API_KEY=rahasia123 \
+  -e WAHA_DASHBOARD_USERNAME=username_anda \
+  -e WAHA_DASHBOARD_PASSWORD=password_anda \
+  -e WAHA_API_KEY=waha_api_key_anda \
   devlikeapro/waha
 ```
 
@@ -183,17 +182,16 @@ docker run -d \
 
 | Environment Variable | Nilai | Keterangan |
 |---|---|---|
-| `WHATSAPP_DASHBOARD_ENABLED` | `true` | Mengaktifkan WAHA Dashboard (UI) |
-| `WHATSAPP_DASHBOARD_USERNAME` | `admin` | Username login WAHA Dashboard |
-| `WHATSAPP_DASHBOARD_PASSWORD` | `admin123` | Password login WAHA Dashboard |
-| `WHATSAPP_API_KEY` | `rahasia123` | API Key untuk autentikasi request dari Laravel |
+| `WAHA_DASHBOARD_USERNAME` | `username_anda` | Username login WAHA Dashboard |
+| `WAHA_DASHBOARD_PASSWORD` | `password_anda` | Password login WAHA Dashboard |
+| `WAHA_API_KEY` | `waha_api_key_anda` | API Key untuk autentikasi request dari Laravel |
 
-> **Catatan:** Sesuaikan nilai `WHATSAPP_API_KEY` dengan nilai `WAHA_API_KEY` yang ada di file `.env` Laravel Anda.
+> **Catatan:** Sesuaikan nilai `WAHA_API_KEY` dengan nilai `WAHA_API_KEY` yang ada di file `.env` Laravel Anda.
 
 **Di Windows (PowerShell / CMD), gunakan format satu baris:**
 
 ```powershell
-docker run -d --name waha -p 3000:3000 -e WHATSAPP_DASHBOARD_ENABLED=true -e WHATSAPP_DASHBOARD_USERNAME=admin -e WHATSAPP_DASHBOARD_PASSWORD=admin123 -e WHATSAPP_API_KEY=rahasia123 devlikeapro/waha
+docker run -d --name waha -p 3000:3000 -e WAHA_DASHBOARD_USERNAME=username_anda -e WAHA_DASHBOARD_PASSWORD=password_anda -e WAHA_API_KEY=waha_api_key_anda devlikeapro/waha
 ```
 
 ### 4. Akses WAHA Dashboard
@@ -205,8 +203,8 @@ http://localhost:3000/dashboard
 ```
 
 Login menggunakan:
-- **Username**: `admin`
-- **Password**: `admin123`
+- **Username**: `username_anda`
+- **Password**: `password_anda`
 
 ### 5. Hubungkan WhatsApp (Scan QR Code)
 
@@ -284,7 +282,7 @@ MAIL_FROM_NAME="Admin PT Global Intermedia Nusantara"
 
 # ─── WAHA WhatsApp API ─────────────────────────────────────
 WAHA_API_URL=http://localhost:3000
-WAHA_API_KEY=rahasia123
+WAHA_API_KEY=waha_api_key_anda
 
 VITE_APP_NAME="${APP_NAME}"
 ```
