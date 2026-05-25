@@ -101,7 +101,7 @@ MAIL_FROM_NAME="Admin PT Global Intermedia Nusantara"
 
 ```env
 WAHA_API_URL=http://localhost:3000
-WAHA_API_KEY=rahasia123
+WAHA_API_KEY=waha_api_key_anda
 ```
 
 > Pastikan container Docker WAHA sudah berjalan (lihat bagian **Instalasi WAHA** di bawah).
