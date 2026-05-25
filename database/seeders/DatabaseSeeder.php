@@ -54,9 +54,5 @@ class DatabaseSeeder extends Seeder
                 'catatan_admin'   => $status === 'pending' ? null : 'Catatan demo ' . $status,
             ]);
         }
-
-        Pendaftaran::factory()->count(50)->create();
-        
-        $this->command->info("Berhasil membuat 50 data dummy Pendaftaran!");
     }
 }
