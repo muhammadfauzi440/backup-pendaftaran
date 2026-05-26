@@ -37,7 +37,6 @@ Sistem informasi pendaftaran magang berbasis web yang dibangun menggunakan **Lar
   - [User](#-user-middleware-auth-roleuser)
 - [Akun Demo](#akun-demo)
 - [Struktur Teknologi](#struktur-teknologi)
-- [Lisensi](#lisensi)
 
 ---
 
@@ -539,7 +538,3 @@ Mengelola data akun pengguna — baik dari sisi user sendiri maupun dari sisi ad
 | UI Feedback | SweetAlert2 |
 
 ---
-
-## Lisensi
-
-Project ini dibuat untuk keperluan internal **PT Global Intermedia Nusantara**.
