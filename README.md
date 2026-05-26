@@ -41,7 +41,7 @@ Sistem informasi pendaftaran magang berbasis web yang dibangun menggunakan **Lar
 Buka terminal, arahkan ke folder `www` (Laragon) atau `htdocs` (XAMPP), lalu jalankan:
 
 ```bash
-git clone https://github.com/muhammadfauzi440/Pendaftaran.git
+git clone https://github.com/muhammadfauzi440/backup-pendaftaran.git
 cd Pendaftaran
 ```
 
@@ -76,7 +76,7 @@ Buka file `.env` dan sesuaikan konfigurasi berikut:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=form_pendaftaran
+DB_DATABASE=backup_form_pendaftaran
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -258,7 +258,7 @@ LOG_LEVEL=debug
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=form_pendaftaran
+DB_DATABASE=backup_form_pendaftaran
 DB_USERNAME=root
 DB_PASSWORD=
 
