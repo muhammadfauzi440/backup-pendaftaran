@@ -41,7 +41,7 @@ Sistem informasi pendaftaran magang berbasis web yang dibangun menggunakan **Lar
 Buka terminal, arahkan ke folder `www` (Laragon) atau `htdocs` (XAMPP), lalu jalankan:
 
 ```bash
-git clone https://github.com/muhammadfauzi440/Pendaftaran.git
+git clone https://github.com/muhammadfauzi440/backup-pendaftaran.git
 cd Pendaftaran
 ```
 
