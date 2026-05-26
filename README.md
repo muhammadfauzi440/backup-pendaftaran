@@ -289,6 +289,112 @@ VITE_APP_NAME="${APP_NAME}"
 
 ---
 
+## Penjelasan Controller
+
+Aplikasi ini memiliki **6 controller** yang masing-masing memiliki tanggung jawab berbeda sesuai dengan prinsip _Single Responsibility_.
+
+---
+
+### `AuthController`
+`app/Http/Controllers/AuthController.php`
+
+Menangani seluruh alur autentikasi pengguna — mulai dari login, registrasi, hingga reset password via email.
+
+| Method | Fungsi |
+|---|---|
+| `login_form()` | Menampilkan halaman form login. Jika sudah login, langsung redirect ke dashboard sesuai role. |
+| `login_proses()` | Memvalidasi kredensial dan melakukan autentikasi. Redirect ke dashboard admin atau user sesuai role. |
+| `register_form()` | Menampilkan halaman form registrasi akun baru. |
+| `register_proses()` | Memvalidasi dan membuat akun user baru dengan role default `user`. |
+| `logout()` | Menghapus sesi pengguna dan mengarahkan kembali ke halaman utama. |
+| `forgot_password_form()` | Menampilkan form permintaan reset password. |
+| `forgot_password_proses()` | Membuat token reset password dan mengirim link reset ke email pengguna. |
+| `reset_password_form()` | Menampilkan form isian password baru berdasarkan token dari email. |
+| `reset_password_proses()` | Memvalidasi token (max 60 menit), mengupdate password baru, dan menghapus token. |
+
+---
+
+### `DashboardController`
+`app/Http/Controllers/DashboardController.php`
+
+Menangani tampilan dashboard untuk masing-masing role, serta fitur cetak surat penerimaan magang.
+
+| Method | Fungsi |
+|---|---|
+| `index_admin()` | Menampilkan dashboard admin dengan statistik pendaftaran (total, pending, diterima, ditolak) beserta grafik bulanan, dengan filter per tahun. |
+| `index_user()` | Menampilkan dashboard user berisi status dan detail pendaftaran milik user yang sedang login. |
+| `cetakSurat()` | Generate dan download PDF surat penerimaan magang. Hanya bisa diakses jika status pendaftaran `diterima`. |
+
+---
+
+### `PendaftaranController`
+`app/Http/Controllers/PendaftaranController.php`
+
+Menangani seluruh proses pendaftaran magang oleh user — mulai dari mengisi formulir, upload dokumen, hingga notifikasi.
+
+| Method | Fungsi |
+|---|---|
+| `index()` | Menampilkan halaman formulir pendaftaran berikut data pendaftaran yang sudah ada (jika ada). |
+| `store()` | Memproses pendaftaran baru: validasi, simpan data utama, anggota kelompok, dokumen, lalu kirim notifikasi WhatsApp & Email. |
+| `update()` | Memperbarui data formulir pendaftaran yang sudah ada. Hanya bisa dilakukan selama status masih `pending`. |
+| `cekStatusPublic()` | Endpoint publik untuk mengecek status pendaftaran berdasarkan kode (tanpa login). |
+| `resendNotifikasi()` | Mengirim ulang notifikasi kode pendaftaran ke user melalui saluran pilihan (WhatsApp atau Email). |
+
+---
+
+### `AdminController`
+`app/Http/Controllers/Admin/AdminController.php`
+
+Mengelola data pendaftaran dari sisi admin — melihat, mengedit, mengubah status, menghapus, dan mengekspor data.
+
+| Method | Fungsi |
+|---|---|
+| `index()` | Menampilkan daftar seluruh pendaftaran dengan fitur pencarian (nama/NIM), filter status, dan pagination. |
+| `show()` | Menampilkan detail lengkap satu data pendaftaran termasuk dokumen-dokumennya. |
+| `edit()` | Menampilkan form edit data pendaftaran oleh admin. |
+| `update()` | Memperbarui data pendaftaran oleh admin: data diri, anggota, hapus/tambah dokumen — dalam satu transaksi database. |
+| `updateStatus()` | Mengubah status pendaftaran menjadi `diterima` atau `ditolak`, mencatat ke audit log, dan mengirim email notifikasi ke pendaftar. |
+| `destroy()` | Menghapus satu data pendaftaran beserta file dokumen, lalu mencatat aksi ke audit log. |
+| `bulkDestroy()` | Menghapus beberapa data pendaftaran sekaligus (hapus massal). |
+| `exportExcel()` | Mengunduh laporan data pendaftaran dalam format `.xlsx` (dengan filter pencarian/status). |
+| `exportPdf()` | Mengunduh laporan data pendaftaran dalam format `.pdf` orientasi landscape (dengan filter pencarian/status). |
+| `auditLogs()` | Menampilkan rekam jejak seluruh aksi admin (hapus, ubah status) secara berurutan. |
+
+---
+
+### `InstansiController`
+`app/Http/Controllers/Admin/InstansiController.php`
+
+Mengelola data master instansi/kampus yang dapat dipilih oleh pendaftar saat mengisi formulir.
+
+| Method | Fungsi |
+|---|---|
+| `index()` | Menampilkan daftar instansi dengan fitur pencarian (nama/alamat), filter tipe (sekolah/universitas), dan pagination. |
+| `edit()` | Menampilkan form edit data instansi. |
+| `update()` | Memperbarui data instansi setelah validasi (nama harus unik). |
+| `store()` | Menyimpan data instansi baru ke database. |
+| `destroy()` | Menghapus instansi. Jika instansi masih digunakan oleh data pendaftaran, penghapusan ditolak dengan pesan error. |
+
+---
+
+### `ProfileController`
+`app/Http/Controllers/ProfileController.php`
+
+Mengelola data akun pengguna — baik dari sisi user sendiri maupun dari sisi admin.
+
+| Method | Fungsi |
+|---|---|
+| `index_user()` | Menampilkan halaman profil akun untuk user yang sedang login. |
+| `update()` | Memperbarui nama, email, dan/atau password akun user yang sedang login. |
+| `index_admin()` | Menampilkan daftar seluruh pengguna dengan fitur pencarian dan filter role, khusus admin. |
+| `create()` | Menampilkan form tambah pengguna baru oleh admin. |
+| `store()` | Membuat akun pengguna baru (admin atau user) oleh admin. |
+| `editUser()` | Menampilkan form edit data pengguna tertentu oleh admin. |
+| `updateUser()` | Memperbarui nama, email, dan/atau password pengguna tertentu oleh admin. |
+| `destroy()` | Menghapus akun pengguna beserta seluruh data terkait. Tidak bisa menghapus akun sendiri (dicek via Gate). |
+
+---
+
 ## Daftar Route Aplikasi
 
 ### 🌐 Publik (Tanpa Login)
