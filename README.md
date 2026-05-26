@@ -76,7 +76,7 @@ Buka file `.env` dan sesuaikan konfigurasi berikut:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=form_pendaftaran
+DB_DATABASE=backup_form_pendaftaran
 DB_USERNAME=root
 DB_PASSWORD=
 ```
