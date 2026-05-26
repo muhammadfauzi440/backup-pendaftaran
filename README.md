@@ -4,6 +4,43 @@ Sistem informasi pendaftaran magang berbasis web yang dibangun menggunakan **Lar
 
 ---
 
+## Daftar Isi
+
+- [Fitur Utama](#fitur-utama)
+- [Persyaratan Sistem](#persyaratan-sistem)
+- [Panduan Instalasi Localhost](#panduan-instalasi-localhost)
+  - [1. Clone Repository](#1-clone-repository)
+  - [2. Instalasi Dependency](#2-instalasi-dependency)
+  - [3. Konfigurasi Environment](#3-konfigurasi-environment)
+  - [4. Generate Application Key](#4-generate-application-key)
+  - [5. Migrasi & Seeder Database](#5-migrasi--seeder-database)
+  - [6. Storage Link](#6-storage-link)
+  - [7. Jalankan Server](#7-jalankan-server)
+- [Instalasi WAHA via Docker](#instalasi-waha-whatsapp-http-api-via-docker)
+  - [1. Pastikan Docker Terinstal](#1-pastikan-docker-sudah-terinstal)
+  - [2. Pull Image WAHA](#2-pull-image-waha)
+  - [3. Jalankan Container WAHA](#3-jalankan-container-waha)
+  - [4. Akses WAHA Dashboard](#4-akses-waha-dashboard)
+  - [5. Hubungkan WhatsApp (Scan QR Code)](#5-hubungkan-whatsapp-scan-qr-code)
+  - [6. Cek Status Container](#6-cek-status-container)
+- [Konfigurasi `.env` Lengkap](#konfigurasi-env-lengkap)
+- [Penjelasan Controller](#penjelasan-controller)
+  - [AuthController](#authcontroller)
+  - [DashboardController](#dashboardcontroller)
+  - [PendaftaranController](#pendaftarancontroller)
+  - [AdminController](#admincontroller)
+  - [InstansiController](#instansicontroller)
+  - [ProfileController](#profilecontroller)
+- [Daftar Route Aplikasi](#daftar-route-aplikasi)
+  - [Publik (Tanpa Login)](#-publik-tanpa-login)
+  - [Admin](#-admin-middleware-auth-roleadmin)
+  - [User](#-user-middleware-auth-roleuser)
+- [Akun Demo](#akun-demo)
+- [Struktur Teknologi](#struktur-teknologi)
+- [Lisensi](#lisensi)
+
+---
+
 ## Fitur Utama
 
 | Fitur | Keterangan |
