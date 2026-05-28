@@ -140,7 +140,7 @@ WAHA_API_URL=http://localhost:3000
 WAHA_API_KEY=waha_api_key_anda
 ```
 
-> Pastikan container Docker WAHA sudah berjalan (lihat bagian **Instalasi WAHA** di bawah).
+> Pastikan container Docker WAHA sudah berjalan (lihat bagian [Instalasi WAHA](#instalasi-waha-whatsapp-http-api-via-docker)).
 
 ### 4. Generate Application Key
 
