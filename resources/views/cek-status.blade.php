@@ -24,7 +24,7 @@
 
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
             <div class="flex flex-col space-y-1.5 mb-6">
-                <h3 class="font-semibold tracking-tight text-2xl text-slate-900">Cek Status</h3>
+                <h3 class="font-bold tracking-tight text-2xl text-slate-900">Cek Status Pendaftaran</h3>
                 <p class="text-sm text-slate-500">Masukkan kode pendaftaran unik Anda untuk melihat status saat ini.</p>
             </div>
 
