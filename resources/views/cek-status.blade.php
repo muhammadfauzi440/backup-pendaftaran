@@ -14,37 +14,35 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 font-['Plus_Jakarta_Sans'] min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+<body class="bg-slate-50/50 font-['Plus_Jakarta_Sans'] min-h-screen flex flex-col items-center justify-center p-4 antialiased">
 
-    <div class="w-full max-w-md relative z-10">
-        <a href="/" class="inline-flex items-center gap-2 text-gray-500 hover:text-red-600 font-bold text-sm mb-8 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+    <div class="w-full max-w-md">
+        <a href="/" class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium text-sm mb-6 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Beranda
         </a>
 
-        <div class="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
-            <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mb-6 border border-red-100">
-                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            
-            <h1 class="text-3xl font-black text-gray-900 tracking-tight mb-2">Cek Status</h1>
-            <p class="text-gray-500 font-medium text-sm mb-8">Masukkan kode pendaftaran unik yang Anda dapatkan setelah mendaftar.</p>
-
-            <div class="relative group mb-6">
-                <input type="text" id="kode_input"
-                    class="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-gray-900 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-red-600 focus:bg-white transition-all shadow-inner"
-                    placeholder="CONTOH: GIN-12345">
-                <button
-                    class="absolute right-2 top-2 bottom-2 px-6 bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase rounded-xl transition-all tracking-widest shadow-md transform hover:-translate-y-0.5"
-                    onclick="cekStatus()">
-                    Cek Status
-                </button>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div class="flex flex-col space-y-1.5 mb-6">
+                <h3 class="font-semibold tracking-tight text-2xl text-slate-900">Cek Status</h3>
+                <p class="text-sm text-slate-500">Masukkan kode pendaftaran unik Anda untuk melihat status saat ini.</p>
             </div>
 
-            <div id="result_container" class="hidden">
-                <div id="result_content" class="p-6 rounded-2xl bg-gray-50 border border-gray-100"></div>
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="kode_input"
+                        class="flex h-10 w-full rounded-md border border-slate-200 bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-600 uppercase"
+                        placeholder="Contoh: GIN-12345">
+                    <button
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-600 disabled:pointer-events-none disabled:opacity-50 bg-red-600 text-white shadow hover:bg-red-600/90 h-10 px-4 py-2 sm:w-auto w-full"
+                        onclick="cekStatus()">
+                        Cek Status
+                    </button>
+                </div>
+            </div>
+
+            <div id="result_container" class="hidden mt-6 pt-6 border-t border-slate-100">
+                <div id="result_content" class="text-sm"></div>
             </div>
         </div>
     </div>
