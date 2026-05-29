@@ -139,6 +139,7 @@ class PendaftaranController extends Controller
             }
         } elseif ($channel === 'email') {
             try {
+                $pendaftaran->load(['instansi', 'anggota']);
                 Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
                 return redirect()->route('user.dashboard')
                     ->with('success', 'Kode pendaftaran berhasil dikirim ulang via Email ke ' . $user->email . '.');
@@ -318,6 +319,7 @@ class PendaftaranController extends Controller
         }
 
         try {
+            $pendaftaran->load(['instansi', 'anggota']);
             Mail::to($user->email)->send(new \App\Mail\KodePendaftaranMail($pendaftaran));
         } catch (\Exception $e) {
             $emailStatus = 'Gagal';
@@ -346,7 +348,11 @@ class PendaftaranController extends Controller
 
         $pesan  = "Terima kasih telah mendaftar di Portal Magang PT Global Intermedia Nusantara.\n\n";
         $pesan .= "Kode pendaftaran Anda adalah: *{$kode}*\n\n";
-        $pesan .= "Silahkan gunakan kode ini untuk mengecek status pendaftaran Anda";
+        $pesan .= "Gunakan kode ini untuk mengecek status pendaftaran Anda kapan saja melalui portal publik kami.\n\n";
+        $pesan .= "---\n";
+        $pesan .= "📧 *Cek Email Anda!*\n";
+        $pesan .= "Detail lengkap pendaftaran (nama, instansi, periode magang, dll) telah dikirimkan ke alamat email yang Anda daftarkan. Silakan buka email Anda untuk melihat ringkasan pendaftaran secara lengkap.\n\n";
+        $pesan .= "_Pesan ini dikirim otomatis oleh sistem, mohon tidak membalas pesan ini._";
 
         $response = Http::withHeaders(['X-Api-Key' => env('WAHA_API_KEY')])
             ->timeout(10)

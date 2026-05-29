@@ -190,7 +190,7 @@ class AdminController extends Controller
             'catatan_admin' => 'required|string|min:5|max:500',
         ]);
 
-        $pendaftaran = Pendaftaran::with('user')->findOrFail($id);
+        $pendaftaran = Pendaftaran::with(['user', 'instansi', 'anggota'])->findOrFail($id);
 
         try {
             DB::beginTransaction();
