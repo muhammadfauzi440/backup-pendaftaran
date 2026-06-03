@@ -52,7 +52,6 @@ Sistem informasi pendaftaran magang berbasis web yang dibangun menggunakan **Lar
 | Kirim Ulang Notifikasi | User dapat kirim ulang notif via WhatsApp / Email dari dashboard |
 | Export Data | Export daftar pendaftar ke Excel dan PDF |
 | Cek Status Publik | Cek status pendaftaran menggunakan kode tanpa login |
-| Audit Log | Rekam jejak setiap perubahan status oleh admin |
 | Cetak Surat Balasan | Generate PDF surat penerimaan magang bagi yang diterima |
 | UI/UX Modern | Antarmuka responsif, Alpine.js, SweetAlert2 |
 
@@ -389,12 +388,11 @@ Mengelola data pendaftaran dari sisi admin — melihat, mengedit, mengubah statu
 | `show()` | Menampilkan detail lengkap satu data pendaftaran termasuk dokumen-dokumennya. |
 | `edit()` | Menampilkan form edit data pendaftaran oleh admin. |
 | `update()` | Memperbarui data pendaftaran oleh admin: data diri, anggota, hapus/tambah dokumen — dalam satu transaksi database. |
-| `updateStatus()` | Mengubah status pendaftaran menjadi `diterima` atau `ditolak`, mencatat ke audit log, dan mengirim email notifikasi ke pendaftar. |
-| `destroy()` | Menghapus satu data pendaftaran beserta file dokumen, lalu mencatat aksi ke audit log. |
+| `updateStatus()` | Mengubah status pendaftaran menjadi `diterima` atau `ditolak`, lalu mengirim email notifikasi ke pendaftar. |
+| `destroy()` | Menghapus satu data pendaftaran beserta file dokumen terkait. |
 | `bulkDestroy()` | Menghapus beberapa data pendaftaran sekaligus (hapus massal). |
 | `exportExcel()` | Mengunduh laporan data pendaftaran dalam format `.xlsx` (dengan filter pencarian/status). |
 | `exportPdf()` | Mengunduh laporan data pendaftaran dalam format `.pdf` orientasi landscape (dengan filter pencarian/status). |
-| `auditLogs()` | Menampilkan rekam jejak seluruh aksi admin (hapus, ubah status) secara berurutan. |
 
 ---
 
@@ -490,13 +488,12 @@ Mengelola data akun pengguna — baik dari sisi user sendiri maupun dari sisi ad
 | `PUT` | `/admin/users/{id}` | `admin.users.update` | Update user |
 | `DELETE` | `/admin/users/{id}` | `admin.users.destroy` | Hapus user |
 
-#### Export & Audit
+#### Export
 
 | Method | URL | Nama Route | Keterangan |
 |:---:|---|---|---|
 | `GET` | `/admin/export/excel` | `admin.export.excel` | Export data ke Excel |
 | `GET` | `/admin/export/pdf` | `admin.export.pdf` | Export data ke PDF |
-| `GET` | `/admin/audit-logs` | `admin.audit-logs.index` | Lihat audit log |
 
 ---
 
