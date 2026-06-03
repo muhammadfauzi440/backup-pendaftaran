@@ -63,14 +63,6 @@
                 <span x-show="sidebarOpen" class="font-bold whitespace-nowrap">Akun</span>
             </a>
 
-            <a href="{{ route('admin.audit-logs.index') }}"
-                class="flex items-center gap-4 px-4 py-3 {{ request()->routeIs('admin.audit-logs.*') ? 'bg-red-600 text-white' : 'text-gray-400 hover:bg-gray-800' }} rounded-xl transition">
-                <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.audit-logs.*') ? 'text-white' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span x-show="sidebarOpen" class="font-bold whitespace-nowrap">Log</span>
-            </a>
-
             <form action="{{ route('logout') }}" method="POST" class="pb-6 mt-auto">
                 @csrf
                 <button type="submit"

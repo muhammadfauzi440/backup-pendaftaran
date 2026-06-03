@@ -15,7 +15,6 @@ use Illuminate\Support\Str;
 use App\Mail\StatusPendaftaranMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
-use App\Models\AuditLog;
 
 class AdminController extends Controller
 {
@@ -165,13 +164,6 @@ class AdminController extends Controller
             DB::beginTransaction();
             $pendaftaran = Pendaftaran::with(['dokumen', 'user'])->findOrFail($id);
 
-            AuditLog::create([
-                'user_id'     => Auth::id(),
-                'action'      => 'Hapus Pendaftaran',
-                'description' => 'Admin menghapus data pendaftaran milik ' . ($pendaftaran->user->name ?? 'User Terhapus') . " (Kode: {$pendaftaran->kode_pendaftaran})",
-                'ip_address'  => request()->ip()
-            ]);
-
             $pendaftaran->delete();
 
             DB::commit();
@@ -198,13 +190,6 @@ class AdminController extends Controller
             $pendaftaran->update([
                 'status' => $request->status,
                 'catatan_admin' => $request->catatan_admin,
-            ]);
-
-            AuditLog::create([
-                'user_id' => Auth::id(),
-                'action' => 'Update Status Pendaftaran',
-                'description' => "Admin mengubah status pendaftaran milik {$pendaftaran->user->name} (Kode: {$pendaftaran->kode_pendaftaran}) menjadi " . strtoupper($request->status),
-                'ip_address' => $request->ip()
             ]);
 
             DB::commit();
@@ -274,11 +259,5 @@ class AdminController extends Controller
             DB::rollBack();
             return back()->with('error', 'Gagal melakukan hapus massal: ' . $e->getMessage());
         }
-    }
-
-    public function auditLogs()
-    {
-        $logs = AuditLog::with('user')->latest()->paginate(20);
-        return view('admin.audit-logs.index', compact('logs'));
     }
 }
