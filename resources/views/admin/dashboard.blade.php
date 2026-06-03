@@ -139,8 +139,8 @@
                     </div>
 
                     <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 min-w-0 overflow-hidden">
-                        <h3 class="text-sm font-black text-gray-900 uppercase tracking-wider mb-2">Asal Instansi</h3>
-                        <p class="text-xs text-gray-500 font-medium mb-4">Data Pendaftar berdasarkan kategori sekolah/kampus.</p>
+                        <h3 class="text-sm font-black text-gray-900 uppercase tracking-wider mb-2">Kategori Peserta</h3>
+                        <p class="text-xs text-gray-500 font-medium mb-4">Data Pendaftar berdasarkan Kategori Peserta.</p>
                         <div id="kategoriChart" class="w-full flex justify-center items-center mt-8" style="min-height: 250px;"></div>
                     </div>
                 </div>
